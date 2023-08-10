@@ -1,0 +1,229 @@
+---
+title: "Listas - ME715 (Linguagem R)"
+subtitle: "`r paste('<i>Período: 2023/2S</i>')`"
+author: '`r paste("<b>Nome: </b>","Tiago Henrique da Cruz","<br>")`'
+date: "`r paste('<b>Último acesso:</b>', format(Sys.time(), '%d de %B, %Y'))`"
+output: 
+  html_document:
+    df_print: paged #(1) Formata automaticamente a tabela em forma HTML
+    toc: true #(2) 'toc: true' e `toc_float: true`: Cria uma barra lateral em referença ao cabeçalho
+    toc_float: true
+    code_folding: hide # (3) Plota os codicos inicialmente escondido, apertando no botão "Code", exibe o comando
+    theme: "flatly" #(4) Tema do HTML (Mais estetica)
+---
+
+<link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/2640/2640637.png">
+
+<div class="header">
+  <img style="position:absolute; top:10px; right:85px; padding:10px;"
+  src="https://cdn-icons-png.flaticon.com/512/2640/2640637.png" width="110" height="110"/>
+</div>
+
+<link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/800px-R_logo.svg.png">
+
+<div class="header">
+  <img style="position:absolute; top:15px; right:185px; padding:8px;"
+  src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/800px-R_logo.svg.png" width="65" height="65"/>
+</div>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Grupo:**
+
+ - Tiago Henrique da Cruz, RA:206333.
+ - Marcelo Marcelo Henrique de Jesus, RA: 183168.
+ - João Vitor Mantovani, RA: 199910.
+
+# Bibliotecas/Pacotes
+```{r Bibliotecas/Pacotes, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+
+# Lista 1 {.tabset .tabset-fade}
+
+**Instruções**
+
+  * A seguinte lista deve ser **resolvida em grupo antes da próxima aula**.
+  * A **resolução da lista será discutida em sala de aula por algúm dos grupos** (a participação
+será avaliada).
+  * O grupo/aluno que se negar a participar, terá pontos descontados.
+  * Os exercícios computacionais **deverão ser resolvidos em R, Python e Julia**. Se os
+resultados não baterem, o grupo deverá investigar o motivo das diferenças.
+
+## Questão 1 {.tabset .tabset-fade .tabset-pills}
+
+[C3] Os dados existentes no arquivo MEAP01 são do estado de Michigan no ano de 2001:
+
+O Banco de dados contém 1823 observações e 11 variaveis, desses:
+
+  * **dcode**: código do distrito;
+  * **bcode**: código do edificio;
+  * **math4**: percentual de estudantes satisfeitos com a matematica da quarta série; 
+  * **read4**: percuntual de estudantes satisfeitos com a leitura da quarta série;
+  * **lunch**: percentual de estudantes com almoço grátis ou desconto;
+  * **enroll**: matrícula escolar;
+  * **expend**: gasto total, $;
+  * **exppp**: despesas por aluno, gasto/matricula;
+  * **lenroll**: log(enroll);
+  * **lexpend**: log(expend);
+  * **lexppp**: log(exppp);
+
+```{r meap01}
+bd_meap01 <- wooldridge::meap01 %>%
+  as_tibble()
+```
+
+Use esses dados para responder às seguintes perguntas:
+
+### item a) 
+
+Encontre os **maiores e menores valores de math4**.
+```{r L1-Q1-a}
+#bd_meap01 %>%
+#  filter(math4 == min(math4) | math4 == max(math4)) %>%
+#  select(math4) %>%
+#  distinct() %>%
+#  mutate(Nota = ifelse(math4 == min(math4), "minima", "maxima")) %>%
+#  pivot_wider(names_from = "Nota", values_from = "math4")
+
+tibble(`Maxima nota em math4` = max(bd_meap01$math4),
+       `Minima nota em math4` = min(bd_meap01$math4))
+
+```
+
+### item b)
+Quantas escolas têm a taxa de aprovação em matemática de exatamente 50%?
+```{r L1-Q1-b}
+n_math_50 <- bd_meap01 %>%
+  filter(math4 == 50) %>%
+  select(bcode) %>%
+  n_distinct()
+
+tibble(`Quantidade de escolas aprovadas em matemática com exatamente 50%` = n_math_50)
+
+```
+
+### item c)
+Compare as taxas médias de aprovação em matemática e leitura. 
+
+```{r L1-Q1-c}
+meap01_tax_mat_lei <- tibble(`Taxa média de aprovação em matemática` = round(mean(bd_meap01$math4),3), 
+       `Taxa média de aprovação em leitura` = round(mean(bd_meap01$read4),3))
+
+meap01_tax_mat_lei
+```
+
+Qual teste tem aprovação mais dificil?
+
+  * O teste com aprovação mais dificil é a `leitura` com `r meap01_tax_mat_lei[[2]]`.
+  
+### item d)
+Encontre a correlação entre math4 e read4. 
+
+```{r L1-Q1-d}
+corr_math_read <- round(cor(bd_meap01$math4, bd_meap01$read4, method = "pearson"),4)
+
+tibble(`Correlação entre math4 e read4` = corr_math_read)
+
+```
+
+O que pode concluir?
+
+Podemos perceber que com `r corr_math_read` de correlação entre `math4` e `read4`, indica uma correção bastate forte.
+
+### item e)
+
+A variável exppp são os gastos por aluno. Encontre o exppp médio e seu desvio padrão.
+```{r L1-Q1-e}
+tibble(`Media de exppp` = mean(bd_meap01$exppp), 
+       `Desvio Padrão de exppp` = sd(bd_meap01$exppp))
+```
+
+### item f)
+
+Suponha que a escola A gaste `USD$6.000` por estudante e a escola B gaste `USD$5.500` por estudante. Com que percentual os gastos da escola A superam os da escola B? Compare isso a 100 × [log(6.000) − log(5.500)], que é a diferença percentual aproximada baseada na diferença dos logaritmos.
+
+```{r L1-Q1-f}
+Atual <- 100*((6000-5500)/5500)
+log_val <- 100*(log(6000)-log(5500))
+
+tibble(Atual = round(Atual,2),
+       log_val = round(log_val,2),
+       `Gastos da escola A que superam os da escola B` = 
+         paste(round(Atual - log_val,2),"%"))
+```
+
+## Questão 2 {.tabset .tabset-fade .tabset-pills}
+
+[C8] Os dados em ECONMATH foram obtidos de **estudantes de um grande curso universitário em introdução à microeconomia**. Para este probrema, estamos interessados em duas variáveis: **`score`, que é a nota do final do curso**, e, **`econhs`, que é uma variável binária que indica se um estudante fez um curso de economia no ensino médio**.
+
+Seja as seguintes variaveis:
+
+  * **age**: idade em anos;
+  * **work**: horas de trabalho por semana;
+  * **study**: horas de estudo por semana; 
+  * **econhs**: se for 1, estudou economia no ensino médio;
+  * **colgpa**: faculdade GPA, inicio do semestre;
+  * **hsgpa**: nota média do ensino médio;
+  * **acteng**: pontuação do inglês ACT;
+  * **actmth**: pontuação da ACT;
+  * **act**: composto ACT;
+  * **mathscr**: pontuação do teste de matemática, 0-10;
+  * **male**: se for 1, masculino;
+  * **calculus**: se for 1, cursou cálculo;
+  * **attexc**: se for 1, se passado attndce 'excelente'; 
+  * **attgood**: se for 1, se passado attndce 'bom';
+  * **fathcoll**: se for 1, o pai tem BA;
+  * **mothcoll**: se for 1, a mãe tem BA;
+  * **score**: nota do final do curso, em porcentual;   
+
+```{r bd_econmath}
+bd_econmath <- wooldridge::econmath %>%
+  as_tibble()
+```
+
+### item a)
+
+Quantos estudantes estão na amostra? Quantos estudantes declaram ter frequentado um curso de economia no ensino médio?
+
+```{r L1-Q2-a}
+tibble(`Total de estudantes` = bd_econmath %>% 
+         nrow(),
+       `Alunos que cursou economia no ensino médio` = bd_econmath %>%
+         filter(econhs == 1) %>%
+         nrow()
+       )
+```
+
+### item b
+Encontre a nota média dos alunos que frequentaram um curso de economia do ensino médio. Como se compara com a nota média daqueles que não o fizeram?
+
+```{r L1-Q2-b}
+med_econhs <- bd_econmath %>%
+  select(econhs, score) %>%
+  mutate(`Cursou economia no ensimo médio ?` = ifelse(econhs == 1, 
+                                                    "Sim", 
+                                                    "Não")) %>%
+  group_by(`Cursou economia no ensimo médio ?`) %>%
+  summarise(`nota média` = round(mean(score),4))
+
+med_econhs
+```
+
+Os estudantes que não fizeram economia no ensino médio teve um desempenho maior daqueles que realizaram, com um diferencial de `r med_econhs[[1,2]]-med_econhs[[2,2]]`.
+
+### item c) 
+
+Os resultados encontrados dizem necessariamente alguma coisa sobre o efeito causal de cursar economia no ensino médio sobre o desempenho no curso universitário? (explique).
+
+Através dos resultados obtidos, não é possível afirmar a existência de um efeito causal em cursar economia no ensino médio sobre o desempenho no curso universitário. Isso se dá devido ao modo em que o experimento foi realizado. O experimento em questão é observacional, o que dificulta o estudo de fatores de confundimento e assim portanto impossibilitando a análise de efeito causal entre os fatores.
+
+
+### item d)
+
+Se quiser obter uma boa estimativa causal do efeito de fazer um curso de economia no ensino médio utilizando a diferença de médias, que experiência faria?
+
+Para o estudo dos efeitos de causalidade, podemos melhorar o experimento de modo a balancear as classes do tratamento de interesse adicionar possíveis fatores de confundimento no experimento. De modo a realizar um experimento balanceado, podemos obter uma amostra com um número igual de alunos que estudaram economia no ensino médio e de alunos que não estudaram. Além da realização de um experimento balanceado, para o estudo de causalidade, é interessante adicionar no conjunto de dados possíveis fatores de confundimento, artigos científico já realizados e relacionados ao assunto seriam consultados.
