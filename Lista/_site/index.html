@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Nome:  Tiago Henrique da Cruz  " />
+
+
+<title>Listas - ME715</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Listas - ME715</h1>
+<h3 class="subtitle"><i>Período: 2023/2S</i></h3>
+<h4 class="author"><b>Nome: </b> Tiago Henrique da Cruz <br></h4>
+<h4 class="date"><b>Último atualização:</b> 15 de agosto, 2023</h4>
+
+</div>
+
+
+<p><link rel="shortcut icon" href="https://images.fineartamerica.com/images/artworkimages/medium/3/stonks-meme-ami-lailasari-transparent.png"></p>
+<div class="header">
+<p><img style="position:absolute; top:10px; right:80px; padding:10px;"
+  src="https://images.fineartamerica.com/images/artworkimages/medium/3/stonks-meme-ami-lailasari-transparent.png" width="170" height="170"/></p>
+</div>
+<p><strong>Grupo:</strong></p>
+<ul>
+<li>Tiago Henrique da Cruz</li>
+<li>Marcelo Marcelo Henrique de Jesus</li>
+<li>João Vitor Mantovani</li>
+</ul>
+<div id="bibliotecaspacotes" class="section level1 tabset tabset-fade">
+<h1 class="tabset tabset-fade">Bibliotecas/Pacotes</h1>
+<div id="r" class="section level2">
+<h2>R</h2>
+<pre class="r"><code>library(tidyverse)
+library(reticulate)
+#library(JuliaCall)
+#install_julia()
+#py_install(&quot;wooldridge&quot;,pip=TRUE)
+#py_install(&quot;markdown-toc&quot;,pip=TRUE)</code></pre>
+</div>
+<div id="python" class="section level2">
+<h2>Python</h2>
+<pre class="python"><code>import pandas as pd
+from scipy.stats import pearsonr
+import wooldridge as wd
+import math</code></pre>
+</div>
+<div id="julia" class="section level2">
+<h2>Julia</h2>
+</div>
+</div>
+<div id="instruções" class="section level1">
+<h1>Instruções</h1>
+<ul>
+<li>A seguinte lista deve ser <strong>resolvida em grupo antes da
+próxima aula</strong>.</li>
+<li>A <strong>resolução da lista será discutida em sala de aula por
+algúm dos grupos</strong> (a participação será avaliada).</li>
+<li>O grupo/aluno que se negar a participar, terá pontos
+descontados.</li>
+<li>Os exercícios computacionais <strong>deverão ser resolvidos em R,
+Python e Julia</strong>. Se os resultados não baterem, o grupo deverá
+investigar o motivo das diferenças.</li>
+</ul>
+</div>
+<div id="lista-1" class="section level1 tabset tabset-fade">
+<h1 class="tabset tabset-fade">Lista 1</h1>
+<div id="questão-1" class="section level2 tabset tabset-fade">
+<h2 class="tabset tabset-fade">Questão 1</h2>
+<p>[C3] Os dados existentes no arquivo <strong>MEAP01 são do estado de
+Michigan no ano de 2001</strong>:</p>
+<p>O Banco de dados contém <strong>1823 observações e 11
+variaveis</strong>, desses:</p>
+<ul>
+<li><strong>bcode</strong>: código do edificio;</li>
+<li><strong>math4</strong>: percentual de estudantes satisfeitos com a
+matematica da quarta série;</li>
+<li><strong>read4</strong>: percuntual de estudantes satisfeitos com a
+leitura da quarta série;</li>
+<li><strong>exppp</strong>: despesas por aluno, gasto/matricula;</li>
+</ul>
+<div id="banco-de-dados" class="section level4 tabset tabset-pills">
+<h4 class="tabset tabset-pills">Banco de Dado(s)</h4>
+<div id="r-1" class="section level5">
+<h5>R</h5>
+<pre class="r"><code>bd_meap01 &lt;- wooldridge::meap01 %&gt;%
+  as_tibble()</code></pre>
+<p>Use esses dados para responder às seguintes perguntas:</p>
+</div>
+<div id="python-1" class="section level5">
+<h5>Python</h5>
+<pre class="python"><code>meap01_pyt = wd.data(&#39;meap01&#39;)</code></pre>
+<p>Use esses dados para responder às seguintes perguntas:</p>
+</div>
+</div>
+<div id="item-a" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item a)</h3>
+<p>Encontre os <strong>maiores e menores valores de math4</strong>.</p>
+<div id="r-2" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>tibble(`Maxima nota em math4` = max(bd_meap01$math4),
+       `Minima nota em math4` = min(bd_meap01$math4))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Maxima nota em math4"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Minima nota em math4"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"100","2":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="python-2" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>pd.DataFrame({&quot;Minimo&quot;:meap01_pyt[[&quot;math4&quot;]].min(),
+              &quot;Maximo&quot;:meap01_pyt[[&quot;math4&quot;]].max()})</code></pre>
+<pre><code>##        Minimo  Maximo
+## math4     0.0   100.0</code></pre>
+</div>
+</div>
+<div id="item-b" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item b)</h3>
+<p>Quantas escolas têm a taxa de aprovação em matemática de exatamente
+50%?</p>
+<div id="r-3" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>n_math_50 &lt;- bd_meap01 %&gt;%
+  filter(math4 == 50) %&gt;%
+  select(bcode) %&gt;%
+  n_distinct()
+
+tibble(`Quantidade de escolas aprovadas em matemática com exatamente 50%` = n_math_50)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Quantidade de escolas aprovadas em matemática com exatamente 50%"],"name":[1],"type":["int"],"align":["right"]}],"data":[{"1":"17"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="python-3" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>pd.DataFrame({&quot;Quantidade de escolas aprovadas em matemática com exatamente 50%&quot;: 
+              [len(meap01_pyt[meap01_pyt.math4 == 50])]})</code></pre>
+<pre><code>##    Quantidade de escolas aprovadas em matemática com exatamente 50%
+## 0                                                 17</code></pre>
+</div>
+</div>
+<div id="item-c" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item c)</h3>
+<p>Compare as taxas médias de aprovação em matemática e leitura.</p>
+<div id="r-4" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>meap01_tax_mat_lei &lt;- tibble(`Taxa média de aprovação em matemática` = round(mean(bd_meap01$math4),3), 
+       `Taxa média de aprovação em leitura` = round(mean(bd_meap01$read4),3))
+
+meap01_tax_mat_lei</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Taxa média de aprovação em matemática"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Taxa média de aprovação em leitura"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"71.909","2":"60.062"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="python-4" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>meap01_pyt.loc[:,[&quot;math4&quot;,&quot;read4&quot;]].\
+    agg([&quot;mean&quot;]).\
+    round(3).\
+    rename(index={&quot;mean&quot;:&quot;Média&quot;})</code></pre>
+<pre><code>##         math4   read4
+## Média  71.909  60.062</code></pre>
+<p>Qual teste tem aprovação mais dificil?</p>
+<ul>
+<li>O teste com aprovação mais dificil é a <code>leitura</code> com
+60.062.</li>
+</ul>
+</div>
+</div>
+<div id="item-d" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item d)</h3>
+<p>Encontre a correlação entre math4 e read4.</p>
+<div id="r-5" class="section level4">
+<h4>R</h4>
+<p>O que pode concluir?</p>
+<pre class="r"><code>corr_math_read &lt;- round(cor(bd_meap01$math4, bd_meap01$read4, method = &quot;pearson&quot;),4)
+
+tibble(`Correlação entre math4 e read4` = corr_math_read)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Correlação entre math4 e read4"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.8427"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Podemos perceber que com 0.8427 de correlação entre
+<code>math4</code> e <code>read4</code>, indica uma correção bastate
+forte.</p>
+</div>
+<div id="python-5" class="section level4">
+<h4>Python</h4>
+<p>O que pode concluir?</p>
+<pre class="python"><code>print(&#39;Temos a correlação entre math4 e read4 de: %.4f&#39; % 
+      pearsonr(meap01_pyt[&#39;math4&#39;], meap01_pyt[&#39;read4&#39;])[0])</code></pre>
+<pre><code>## Temos a correlação entre math4 e read4 de: 0.8427</code></pre>
+</div>
+</div>
+<div id="item-e" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item e)</h3>
+<p>A variável exppp são os gastos por aluno. Encontre o exppp médio e
+seu desvio padrão.</p>
+<div id="r-6" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>tibble(`Media de exppp` = mean(bd_meap01$exppp), 
+       `Desvio Padrão de exppp` = sd(bd_meap01$exppp))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Media de exppp"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Desvio Padrão de exppp"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"5194.865","2":"1091.89"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="python-6" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>meap01_pyt.loc[:,[&quot;exppp&quot;]].\
+    agg([&quot;mean&quot;, &quot;std&quot;]).\
+    round(3).\
+    rename(index={&quot;mean&quot;:&quot;Médio&quot;,
+                  &quot;std&quot;:&quot;Desvio padrão&quot;})</code></pre>
+<pre><code>##                   exppp
+## Médio          5194.865
+## Desvio padrão  1091.890</code></pre>
+</div>
+</div>
+<div id="item-f" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item f)</h3>
+<p>Suponha que a escola A gaste <code>USD$6.000</code> por estudante e a
+escola B gaste <code>USD$5.500</code> por estudante. Com que percentual
+os gastos da escola A superam os da escola B? Compare isso a 100 ×
+[log(6.000) − log(5.500)], que é a diferença percentual aproximada
+baseada na diferença dos logaritmos.</p>
+<div id="r-7" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>Atual &lt;- 100*((6000-5500)/5500)
+log_val &lt;- 100*(log(6000)-log(5500))
+
+tibble(Atual = round(Atual,2),
+       log_val = round(log_val,2),
+       `Gastos da escola A que superam os da escola B` = 
+         paste(round(Atual - log_val,2),&quot;%&quot;))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Atual"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["log_val"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Gastos da escola A que superam os da escola B"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"9.09","2":"8.7","3":"0.39 %"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="python-7" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>Atual = round(100*((6000-5500)/5500),2)
+log_val = round(100*(math.log(6000)-math.log(5500)),2)
+
+print(&#39;Temos que os gastos da escola A que superam \
+os da escola B em %.2f%%.&#39; %(Atual-log_val))</code></pre>
+<pre><code>## Temos que os gastos da escola A que superam os da escola B em 0.39%.</code></pre>
+</div>
+</div>
+</div>
+<div id="questão-2" class="section level2 tabset tabset-fade">
+<h2 class="tabset tabset-fade">Questão 2</h2>
+<p>[C8] Os dados em ECONMATH foram obtidos de <strong>estudantes de um
+grande curso universitário em introdução à microeconomia</strong>. Para
+este probrema, estamos interessados em duas variáveis:
+<strong><code>score</code>, que é a nota do final do curso</strong>, e,
+<strong><code>econhs</code>, que é uma variável binária que indica se um
+estudante fez um curso de economia no ensino médio</strong>.</p>
+<div id="banco-de-dados-1" class="section level4 tabset tabset-pills">
+<h4 class="tabset tabset-pills">Banco de Dado(s)</h4>
+<div id="r-8" class="section level5">
+<h5>R</h5>
+<pre class="r"><code>bd_econmath &lt;- wooldridge::econmath %&gt;%
+  as_tibble()</code></pre>
+</div>
+<div id="python-8" class="section level5">
+<h5>Python</h5>
+<pre class="python"><code>econmath_pyt = wd.data(&#39;econmath&#39;)</code></pre>
+</div>
+</div>
+<div id="item-a-1" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item a)</h3>
+<p>Quantos estudantes estão na amostra? Quantos estudantes declaram ter
+frequentado um curso de economia no ensino médio?</p>
+<div id="r-9" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>tibble(`Total de estudantes` = bd_econmath %&gt;% 
+         nrow(),
+       `Alunos que cursou economia no ensino médio` = bd_econmath %&gt;%
+         filter(econhs == 1) %&gt;%
+         nrow()
+       )</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Total de estudantes"],"name":[1],"type":["int"],"align":["right"]},{"label":["Alunos que cursou economia no ensino médio"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"856","2":"317"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="python-9" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>def len_econhs_1(x):
+    return(
+        x.loc[x==1].\
+        agg(len)
+    )
+
+econmath_pyt.loc[:, [&quot;econhs&quot;]].\
+    agg([len_econhs_1, len]).\
+    rename(index={&quot;len_econhs_1&quot;:&quot;Alunos que cursou economia no ensino médio&quot;,
+                  &quot;len&quot;:&quot;Total de estudantes&quot;},
+          columns = {&quot;econhs&quot;: &quot;Quantidade&quot;})</code></pre>
+<pre><code>##                                             Quantidade
+## Alunos que cursou economia no ensino médio         317
+## Total de estudantes                                856</code></pre>
+</div>
+</div>
+<div id="item-b-1" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item b</h3>
+<p>Encontre a nota média dos alunos que frequentaram um curso de
+economia do ensino médio. Como se compara com a nota média daqueles que
+não o fizeram?</p>
+<div id="r-10" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>med_econhs &lt;- bd_econmath %&gt;%
+  select(econhs, score) %&gt;%
+  mutate(`Cursou economia no ensimo médio ?` = ifelse(econhs == 1, 
+                                                    &quot;Sim&quot;, 
+                                                    &quot;Não&quot;)) %&gt;%
+  group_by(`Cursou economia no ensimo médio ?`) %&gt;%
+  summarise(`nota média` = round(mean(score),4))
+
+med_econhs</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Cursou economia no ensimo médio ?"],"name":[1],"type":["chr"],"align":["left"]},{"label":["nota média"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Não","2":"72.9079"},{"1":"Sim","2":"72.0759"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Os estudantes que não fizeram economia no ensino médio teve um
+desempenho maior daqueles que realizaram, com um diferencial de
+0.832.</p>
+</div>
+<div id="python-10" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>econmath_pyt.groupby(&quot;econhs&quot;)[[&quot;score&quot;]].\
+    agg([&quot;mean&quot;]).\
+    round(4).\
+    rename(columns = {&quot;score&quot;: &quot;Nota&quot;,
+                      &quot;mean&quot;: &quot;Média&quot;},
+           index={0:&quot;Não&quot;,
+                  1:&quot;Sim&quot;})</code></pre>
+<pre><code>##            Nota
+##           Média
+## econhs         
+## Não     72.9079
+## Sim     72.0759</code></pre>
+<p>Os estudantes que não fizeram economia no ensino médio teve um
+desempenho maior daqueles que realizaram, com um diferencial de
+0.832.</p>
+</div>
+</div>
+<div id="item-c-1" class="section level3">
+<h3>item c)</h3>
+<p>Os resultados encontrados dizem necessariamente alguma coisa sobre o
+efeito causal de cursar economia no ensino médio sobre o desempenho no
+curso universitário? (explique).</p>
+<p>Através dos resultados obtidos, não é possível afirmar a existência
+de um efeito causal em cursar economia no ensino médio sobre o
+desempenho no curso universitário. Isso se dá devido ao modo em que o
+experimento foi realizado. O experimento em questão é observacional, o
+que dificulta o estudo de fatores de confundimento e assim portanto
+impossibilitando a análise de efeito causal entre os fatores.</p>
+</div>
+<div id="item-d-1" class="section level3">
+<h3>item d)</h3>
+<p>Se quiser obter uma boa estimativa causal do efeito de fazer um curso
+de economia no ensino médio utilizando a diferença de médias, que
+experiência faria?</p>
+<p>Para o estudo dos efeitos de causalidade, podemos melhorar o
+experimento de modo a balancear as classes do tratamento de interesse
+adicionar possíveis fatores de confundimento no experimento. De modo a
+realizar um experimento balanceado, podemos obter uma amostra com um
+número igual de alunos que estudaram economia no ensino médio e de
+alunos que não estudaram. Além da realização de um experimento
+balanceado, para o estudo de causalidade, é interessante adicionar no
+conjunto de dados possíveis fatores de confundimento, artigos científico
+já realizados e relacionados ao assunto seriam consultados.</p>
+</div>
+</div>
+</div>
+<div id="lista-2" class="section level1 tabset tabset-fade">
+<h1 class="tabset tabset-fade">Lista 2</h1>
+<div id="questão-1-1" class="section level2">
+<h2>Questão 1</h2>
+<p>Mostre que <span class="math inline">\(E(\hat{u}|X) = 0\)</span>.</p>
+<p>Seja o modelo de regressão com: <span class="math inline">\(y =
+X\beta \ + \ u\)</span>, vale ressaltar que <span
+class="math inline">\(u\)</span> tem uma distribuiição normal, isso é,
+<span class="math inline">\(u \sim N(0,1)\)</span>, desse maneira
+temos:</p>
+<p><span class="math display">\[y = X\beta \ + \ u \Rightarrow E[y]
+=  E[\beta X] + E[u]\]</span> <span class="math display">\[\hat{y} = X
+\hat{\beta}\]</span></p>
+<p>Dessa maneira, temos:</p>
+<p><span class="math display">\[E(\hat{u}|X) = E(y-\hat{y}|X)= E([X\beta
+\ + \ u]-[X \hat{\beta}]|X)\]</span></p>
+<p><span class="math display">\[E(X\beta|X) + E(u|X) -
+E(X\hat{\beta}|X)= E(X\beta|X) - E(XE[\beta]|X)\]</span> <span
+class="math display">\[E(X\beta|X) - E(X\beta|X)=0\]</span></p>
+<p><marca_tex>Portanto, temos:</marca_tex></p>
+<p><marca_tex><span class="math display">\[E(\hat{u}|X) =
+0\]</span></marca_tex></p>
+</div>
+<div id="questão-2-1" class="section level2">
+<h2>Questão 2</h2>
+<p>Mostre que <span class="math inline">\(X′\hat{u} = 0\)</span> e <span
+class="math inline">\(\sum_{i=1}^{n}\hat{u}_i = 0\)</span>.</p>
+</div>
+<div id="questão-3" class="section level2">
+<h2>Questão 3</h2>
+<p>Seja um modelo de regressão linear simples (<span
+class="math inline">\(Y = \beta_0 + \beta_1X + u\)</span>) Mostre que se
+a correlação amostral entre <span class="math inline">\(Y\)</span> e
+<span class="math inline">\(X\)</span> for positiva, então <span
+class="math inline">\(\hat{\beta}_1 &gt; 0\)</span>. O que acontece com
+<span class="math inline">\(\hat{\beta}_1\)</span> se a correlação
+amostral entre <span class="math inline">\(Y\)</span> e <span
+class="math inline">\(X\)</span> for negativa? (<span
+class="math inline">\(\hat{\beta}_1\)</span> é o estimador MQO).</p>
+</div>
+<div id="questão-4" class="section level2 tabset tabset-fade">
+<h2 class="tabset tabset-fade">Questão 4</h2>
+<p>O conjunto de dados BWGHT contêm informações de nascimentos nos
+Estados Unidos. As duas variáveis de interesse são bwght (peso do
+recém-nascido em onças) e cigs (número médio de cigarros que a mãe fumou
+por dia durante a gravidez). Regrida bwght sobre cigs e responda às
+seguintes perguntas:</p>
+<div id="item-a-2" class="section level3">
+<h3>item a)</h3>
+<p>Qual é o peso do nascimento previsto quando cigs = 0? E quando cigs =
+20?</p>
+</div>
+<div id="item-b-2" class="section level3">
+<h3>item b)</h3>
+<p>O MRLS necessariamente captura uma relação causal entre o peso do
+nascimento da criança e os hábitos de fumar da mãe?</p>
+</div>
+<div id="item-c-2" class="section level3">
+<h3>item c)</h3>
+<p>Para prever um peso de nascimento de 125 onças, qual deveria ser a
+magnitude de cigs?</p>
+</div>
+<div id="item-d-2" class="section level3">
+<h3>item d)</h3>
+<p>Verifique qual a proporção de mulheres que não fumaram durante a
+gravidez na amostra. Sua conclusão no item anterior muda?</p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
