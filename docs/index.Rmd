@@ -1,0 +1,405 @@
+---
+title: "Listas - ME715"
+subtitle: "`r paste('<i>Período: 2023/2S</i>')`"
+author: '`r paste("<b>Nome: </b>","Tiago Henrique da Cruz","<br>")`'
+date: "`r paste('<b>Último atualização:</b>', format(Sys.time(), '%d de %B, %Y'))`"
+output: 
+  html_document: 
+    df_print: paged
+    toc: yes
+    toc_float: yes
+    code_folding: hide
+    theme: flatly
+---
+
+<link rel="shortcut icon" href="https://images.fineartamerica.com/images/artworkimages/medium/3/stonks-meme-ami-lailasari-transparent.png">
+
+```{=html}
+<img style="position:absolute; top:10px; right:80px; padding:10px;"
+  src="https://images.fineartamerica.com/images/artworkimages/medium/3/stonks-meme-ami-lailasari-transparent.png" width="170" height="170"/>
+```
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Grupo:**
+
+-   Tiago Henrique da Cruz
+-   Marcelo Marcelo Henrique de Jesus
+-   João Vitor Mantovani
+
+# Bibliotecas/Pacotes {.tabset .tabset-fade}
+
+## R
+
+```{r Pacotes_R, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(reticulate)
+library(wooldridge)
+#library(JuliaCall)
+#install_julia()
+#py_install("wooldridge",pip=TRUE)
+#py_install("markdown-toc",pip=TRUE)
+#julia_setup()
+#JuliaCall::julia_install_package("Libdl")
+```
+
+## Python
+
+```{python Pacotes_P, message=FALSE, warning=FALSE}
+import pandas as pd
+from scipy.stats import pearsonr
+import wooldridge as wd
+import math
+```
+
+## Julia
+
+# Instruções
+
+-   A seguinte lista deve ser **resolvida em grupo antes da próxima aula**.
+-   A **resolução da lista será discutida em sala de aula por algúm dos grupos** (a participação será avaliada).
+-   O grupo/aluno que se negar a participar, terá pontos descontados.
+-   Os exercícios computacionais **deverão ser resolvidos em R, Python e Julia**. Se os resultados não baterem, o grupo deverá investigar o motivo das diferenças.
+
+# Lista 1 {.tabset .tabset-fade}
+
+## Questão 1 {.tabset .tabset-fade}
+
+[C3] Os dados existentes no arquivo **MEAP01 são do estado de Michigan no ano de 2001**:
+
+O Banco de dados contém **1823 observações e 11 variaveis**, desses:
+
+-   **bcode**: código do edificio;
+-   **math4**: percentual de estudantes satisfeitos com a matematica da quarta série;
+-   **read4**: percuntual de estudantes satisfeitos com a leitura da quarta série;
+-   **exppp**: despesas por aluno, gasto/matricula;
+
+#### Banco de Dado(s) {.tabset .tabset-pills}
+
+##### R
+
+```{r meap01_r}
+bd_meap01 <- meap01 %>%
+  as_tibble()
+```
+
+Use esses dados para responder às seguintes perguntas:
+
+##### Python
+
+```{python}
+meap01_pyt = wd.data('meap01')
+```
+
+Use esses dados para responder às seguintes perguntas:
+
+### item a) {.tabset .tabset-pills}
+
+Encontre os **maiores e menores valores de math4**.
+
+#### R
+
+```{r L1-Q1-a}
+tibble(`Maxima nota em math4` = max(bd_meap01$math4),
+       `Minima nota em math4` = min(bd_meap01$math4))
+```
+
+#### Python
+
+```{python}
+pd.DataFrame({"Minimo":meap01_pyt[["math4"]].min(),
+              "Maximo":meap01_pyt[["math4"]].max()})
+```
+
+### item b) {.tabset .tabset-pills}
+
+Quantas escolas têm a taxa de aprovação em matemática de exatamente 50%?
+
+#### R
+
+```{r L1-Q1-b}
+n_math_50 <- bd_meap01 %>%
+  filter(math4 == 50) %>%
+  select(bcode) %>%
+  n_distinct()
+
+tibble(`Quantidade de escolas aprovadas em matemática com exatamente 50%` = n_math_50)
+
+```
+
+#### Python
+
+```{python}
+pd.DataFrame({"Quantidade de escolas aprovadas em matemática com exatamente 50%": 
+              [len(meap01_pyt[meap01_pyt.math4 == 50])]})
+```
+
+### item c) {.tabset .tabset-pills}
+
+Compare as taxas médias de aprovação em matemática e leitura.
+
+#### R
+
+```{r L1-Q1-c}
+meap01_tax_mat_lei <- tibble(`Taxa média de aprovação em matemática` = round(mean(bd_meap01$math4),3), 
+       `Taxa média de aprovação em leitura` = round(mean(bd_meap01$read4),3))
+
+meap01_tax_mat_lei
+```
+
+#### Python
+
+```{python}
+meap01_pyt.loc[:,["math4","read4"]].\
+    agg(["mean"]).\
+    round(3).\
+    rename(index={"mean":"Média"})
+```
+
+Qual teste tem aprovação mais dificil?
+
+-   O teste com aprovação mais dificil é a `leitura` com `r meap01_tax_mat_lei[[2]]`.
+
+### item d) {.tabset .tabset-pills}
+
+Encontre a correlação entre math4 e read4.
+
+#### R
+
+O que pode concluir?
+
+```{r L1-Q1-d}
+corr_math_read <- round(cor(bd_meap01$math4, bd_meap01$read4, method = "pearson"),4)
+
+tibble(`Correlação entre math4 e read4` = corr_math_read)
+
+```
+
+Podemos perceber que com `r corr_math_read` de correlação entre `math4` e `read4`, indica uma correção bastate forte.
+
+#### Python
+
+O que pode concluir?
+
+```{python}
+print('Temos a correlação entre math4 e read4 de: %.4f' % 
+      pearsonr(meap01_pyt['math4'], meap01_pyt['read4'])[0])
+```
+
+### item e) {.tabset .tabset-pills}
+
+A variável exppp são os gastos por aluno. Encontre o exppp médio e seu desvio padrão.
+
+#### R
+
+```{r L1-Q1-e}
+tibble(`Media de exppp` = mean(bd_meap01$exppp), 
+       `Desvio Padrão de exppp` = sd(bd_meap01$exppp))
+```
+
+#### Python
+
+```{python}
+meap01_pyt.loc[:,["exppp"]].\
+    agg(["mean", "std"]).\
+    round(3).\
+    rename(index={"mean":"Médio",
+                  "std":"Desvio padrão"})
+```
+
+### item f) {.tabset .tabset-pills}
+
+Suponha que a escola A gaste `USD$6.000` por estudante e a escola B gaste `USD$5.500` por estudante. Com que percentual os gastos da escola A superam os da escola B? Compare isso a 100 × [log(6.000) − log(5.500)], que é a diferença percentual aproximada baseada na diferença dos logaritmos.
+
+#### R
+
+```{r L1-Q1-f}
+Atual <- 100*((6000-5500)/5500)
+log_val <- 100*(log(6000)-log(5500))
+
+tibble(Atual = round(Atual,2),
+       log_val = round(log_val,2),
+       `Gastos da escola A que superam os da escola B` = 
+         paste(round(Atual - log_val,2),"%"))
+```
+
+#### Python
+
+```{python}
+Atual = round(100*((6000-5500)/5500),2)
+log_val = round(100*(math.log(6000)-math.log(5500)),2)
+
+print('Temos que os gastos da escola A que superam \
+os da escola B em %.2f%%.' %(Atual-log_val))
+```
+
+## Questão 2 {.tabset .tabset-fade}
+
+[C8] Os dados em ECONMATH foram obtidos de **estudantes de um grande curso universitário em introdução à microeconomia**. Para este probrema, estamos interessados em duas variáveis: **`score`, que é a nota do final do curso**, e, **`econhs`, que é uma variável binária que indica se um estudante fez um curso de economia no ensino médio**.
+
+#### Banco de Dado(s) {.tabset .tabset-pills}
+
+##### R
+
+```{r bd_econmath}
+bd_econmath <- wooldridge::econmath %>%
+  as_tibble()
+```
+
+##### Python
+
+```{python}
+econmath_pyt = wd.data('econmath')
+```
+
+### item a) {.tabset .tabset-pills}
+
+Quantos estudantes estão na amostra? Quantos estudantes declaram ter frequentado um curso de economia no ensino médio?
+
+#### R
+
+```{r L1-Q2-a}
+tibble(`Total de estudantes` = bd_econmath %>% 
+         nrow(),
+       `Alunos que cursou economia no ensino médio` = bd_econmath %>%
+         filter(econhs == 1) %>%
+         nrow()
+       )
+```
+
+#### Python
+
+```{python}
+def len_econhs_1(x):
+    return(
+        x.loc[x==1].\
+        agg(len)
+    )
+
+econmath_pyt.loc[:, ["econhs"]].\
+    agg([len_econhs_1, len]).\
+    rename(index={"len_econhs_1":"Alunos que cursou economia no ensino médio",
+                  "len":"Total de estudantes"},
+          columns = {"econhs": "Quantidade"})
+```
+
+### item b {.tabset .tabset-pills}
+
+Encontre a nota média dos alunos que frequentaram um curso de economia do ensino médio. Como se compara com a nota média daqueles que não o fizeram?
+
+#### R
+
+```{r L1-Q2-b}
+med_econhs <- bd_econmath %>%
+  select(econhs, score) %>%
+  mutate(`Cursou economia no ensimo médio ?` = ifelse(econhs == 1, 
+                                                    "Sim", 
+                                                    "Não")) %>%
+  group_by(`Cursou economia no ensimo médio ?`) %>%
+  summarise(`nota média` = round(mean(score),4))
+
+med_econhs
+```
+
+Os estudantes que não fizeram economia no ensino médio teve um desempenho maior daqueles que realizaram, com um diferencial de r med_econhs[[1,2]]-med_econhs[[2,2]].
+
+#### Python
+
+```{python}
+econmath_pyt.groupby("econhs")[["score"]].\
+    agg(["mean"]).\
+    round(4).\
+    rename(columns = {"score": "Nota",
+                      "mean": "Média"},
+           index={0:"Não",
+                  1:"Sim"})
+```
+
+Os estudantes que não fizeram economia no ensino médio teve um desempenho maior daqueles que realizaram, com um diferencial de `r med_econhs[[1,2]]-med_econhs[[2,2]]`.
+
+### item c)
+
+Os resultados encontrados dizem necessariamente alguma coisa sobre o efeito causal de cursar economia no ensino médio sobre o desempenho no curso universitário? (explique).
+
+Através dos resultados obtidos, não é possível afirmar a existência de um efeito causal em cursar economia no ensino médio sobre o desempenho no curso universitário. Isso se dá devido ao modo em que o experimento foi realizado. O experimento em questão é observacional, o que dificulta o estudo de fatores de confundimento e assim portanto impossibilitando a análise de efeito causal entre os fatores.
+
+### item d)
+
+Se quiser obter uma boa estimativa causal do efeito de fazer um curso de economia no ensino médio utilizando a diferença de médias, que experiência faria?
+
+Para o estudo dos efeitos de causalidade, podemos melhorar o experimento de modo a balancear as classes do tratamento de interesse adicionar possíveis fatores de confundimento no experimento. De modo a realizar um experimento balanceado, podemos obter uma amostra com um número igual de alunos que estudaram economia no ensino médio e de alunos que não estudaram. Além da realização de um experimento balanceado, para o estudo de causalidade, é interessante adicionar no conjunto de dados possíveis fatores de confundimento, artigos científico já realizados e relacionados ao assunto seriam consultados.
+
+# Lista 2 {.tabset .tabset-fade}
+
+## Questão 1
+
+Mostre que $E(\hat{u}|X) = 0$.
+
+Seja o modelo de regressão com: $y = X\beta \ + \ u$, vale ressaltar que $u$ tem uma distribuiição normal, isso é, $u \sim N(0,1)$, desse maneira temos:
+
+$$y = X\beta \ + \ u \Rightarrow E[y] =  E[\beta X] + E[u]$$ $$\hat{y} = X \hat{\beta}$$
+
+Dessa maneira, temos:
+
+$$E(\hat{u}|X) = E(y-\hat{y}|X)= E([X\beta \ + \ u]-[X \hat{\beta}]|X)$$
+
+$$E(X\beta|X) + E(u|X) - E(X\hat{\beta}|X)= XE(\beta|X) - XE(\hat{\beta}|X)$$
+
+Vale ressaltar que $E(\hat{\beta}|X) = E(\beta|X)$, assim temos:
+
+$$XE(\beta|X) - XE(\beta|X)=0$$
+
+Portanto, temos:
+
+$$E(\hat{u}|X) = 0$$
+
+## Questão 2
+
+Mostre que $X′\hat{u} = 0$ e $\sum_{i=1}^{n}\hat{u}_i = 0$.
+
+## Questão 3
+
+Seja um modelo de regressão linear simples ($Y = \beta_0 + \beta_1X + u$) Mostre que se a correlação amostral entre $Y$ e $X$ for positiva, então $\hat{\beta}_1 > 0$. O que acontece com $\hat{\beta}_1$ se a correlação amostral entre $Y$ e $X$ for negativa? ($\hat{\beta}_1$ é o estimador MQO).
+
+## Questão 4 {.tabset .tabset-fade}
+
+O conjunto de dados BWGHT contêm informações de nascimentos nos Estados Unidos. As duas variáveis de interesse são bwght (peso do recém-nascido em onças) e cigs (número médio de cigarros que a mãe fumou por dia durante a gravidez). Regrida bwght sobre cigs e responda às seguintes perguntas:
+
+### item a)
+
+Qual é o peso do nascimento previsto quando cigs = 0? E quando cigs = 20?
+
+### item b)
+
+O MRLS necessariamente captura uma relação causal entre o peso do nascimento da criança e os hábitos de fumar da mãe?
+
+### item c)
+
+Para prever um peso de nascimento de 125 onças, qual deveria ser a magnitude de cigs?
+
+### item d)
+
+Verifique qual a proporção de mulheres que não fumaram durante a gravidez na amostra. Sua conclusão no item anterior muda?
+
+# Lista 3 {.tabset .tabset-fade}
+
+## Questão 1
+
+Prove que $M = I − X(X′X)−1X′$ é simétrica e idempotente.
+
+## Questão 2
+
+Mostre que $s^2 = \frac{\hat{u}'\hat{u}}{n-k-1}$ é um estimador não viesado para $\sigma^2$.
+
+## Questão 3
+
+Mostre que $R^2$ nunca diminui quando incluimos novas variáveis no modelo.
+
+## Questão 4
+
+Utilize o dataset HTV, estime o modelo de regresão
+
+$$educ = \beta_{0} + \beta_{1}motheduc + \beta_{2}fatheduc + \beta_{3}abil + \beta_{4}abil^2 + u$$
+
+e interplete os resultados.
