@@ -408,7 +408,7 @@ Desse modo, podemos definir que **$(X^{\prime}X)^{-1}$ é simétrica.**
 
 • *(ii.)* Verificando a seguinte simétria: 
 
-$$[X(X^{\prime}X)^{-1}X^{\prime}]^{\prime} = X^{\prime^{~\prime}}(X^{\prime}X)^{{-1}^\prime}X^{\prime} = X(X^{\prime}X)^{-1}X^{\prime}$$
+$$[X(X^{\prime}X)^{-1}X^{\prime}]^{\prime} = X^{\prime^{~\prime}}(X^{\prime}X)^{-1^{\prime}}X^{\prime} = X(X^{\prime}X)^{-1}X^{\prime}$$
 
 Assim, $X(X^{\prime}X)^{-1}X^{\prime}$ **é simetrica**.
 
