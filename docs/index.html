@@ -2864,7 +2864,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Listas - ME715</h1>
 <h3 class="subtitle"><i>Período: 2023/2S</i></h3>
 <h4 class="author"><b>Nome: </b> Tiago Henrique da Cruz <br></h4>
-<h4 class="date"><b>Último atualização:</b> 21 de agosto, 2023</h4>
+<h4 class="date"><b>Último atualização:</b> 24 de agosto, 2023</h4>
 
 </div>
 
@@ -2896,7 +2896,9 @@ library(wooldridge)
 <pre class="python"><code>import pandas as pd
 from scipy.stats import pearsonr
 import wooldridge as wd
-import math</code></pre>
+import math
+import numpy as np
+import statsmodels.formula.api as smf</code></pre>
 </div>
 <div id="julia" class="section level2">
 <h2>Julia</h2>
@@ -3305,26 +3307,215 @@ gravidez na amostra. Sua conclusão no item anterior muda?</p>
 <h1 class="tabset tabset-fade">Lista 3</h1>
 <div id="questão-1-2" class="section level2">
 <h2>Questão 1</h2>
-<p>Prove que <span class="math inline">\(M = I − X(X′X)−1X′\)</span> é
-simétrica e idempotente.</p>
+<p>Prove que <span class="math inline">\(M = I −
+X(X^{\prime}X)^{−1}X^{\prime}\)</span> é simétrica e idempotente.</p>
+<p><strong><em>Resposta: </em></strong></p>
+<p>• <em>(i.)</em> Verificando se é simetrica a seguinte operação: <span class="math inline">\((X^{\prime}X) = X^{\prime}X^{\prime^{~\prime}} =
+X^{\prime}X\)</span>, <strong>é simétrica</strong>.</p>
+<p>Vale ressaltar o seguinte teorema: seja uma matriz <span class="math inline">\(A\)</span> não singular simetrica, logo <span class="math inline">\(A^{-1}\)</span> também é simétrica. Alias, segue
+abaixo a prova mais detalhada:</p>
+<p>Prova: <span class="math inline">\((A^{-1}A)^t =
+A^t(A^{-1})^t\)</span></p>
+<p><span class="math display">\[\Rightarrow A(A^{-1})^t =
+AA^{-1}\]</span> <span class="math display">\[\Rightarrow
+A^{-1}A(A^{-1})^t=A^{-1}AA^{-1}\]</span> <span class="math display">\[(A^{-1})^t = A^{-1}\]</span></p>
+<p>Desse modo, podemos definir que <strong><span class="math inline">\((X^{\prime}X)^{-1}\)</span> é
+simétrica.</strong></p>
+<p>• <em>(ii.)</em> Verificando a seguinte simétria:</p>
+<p><span class="math display">\[[X(X^{\prime}X)^{-1}X^{\prime}]^{\prime}
+= X^{\prime^{~\prime}}(X^{\prime}X)^{{-1}^\prime}X^{\prime} =
+X(X^{\prime}X)^{-1}X^{\prime}\]</span></p>
+<p>Assim, <span class="math inline">\(X(X^{\prime}X)^{-1}X^{\prime}\)</span> <strong>é
+simetrica</strong>.</p>
+<p>• <em>(iii.)</em> Ademais, aplicando os resultados obtidos em
+<em>(i.)</em> e <em>(ii.)</em> para analisar se <span class="math inline">\(M\)</span> é idempotente, obtemos:</p>
+<p><span class="math display">\[HH =
+X(X^{\prime}X)^{-1}X^{\prime}X(X^{\prime}X)^{-1}X^{\prime} =
+XI(X^{\prime}X)^{-1}X^{\prime} = X(X^{\prime}X)^{-1}X^{\prime} =
+H\]</span></p>
+<p>Como <strong><span class="math inline">\(H\)</span> é
+idempotente</strong>, logo temos:</p>
+<p><span class="math display">\[MM = (I-H)(I-H) = II - IH - HI + HH = I
+- H - H + H = (I-H) = M\]</span></p>
+<p>Assim <span class="math inline">\(M\)</span> <strong>é
+idempotente</strong>.</p>
 </div>
 <div id="questão-2-2" class="section level2">
 <h2>Questão 2</h2>
 <p>Mostre que <span class="math inline">\(s^2 =
 \frac{\hat{u}&#39;\hat{u}}{n-k-1}\)</span> é um estimador não viesado
 para <span class="math inline">\(\sigma^2\)</span>.</p>
+<p><strong><em>Resposta:</em></strong></p>
+<p><span class="math display">\[E(\hat{u}) = E(Y) - E(X\hat{\beta}) =
+E(XB) + E(u) - E(X\hat{\beta})\]</span> <span class="math display">\[E(X\beta) - E(X\hat{\beta}) = X\beta -
+X\hat{\beta} = 0\]</span> <span class="math display">\[E(\hat{u}^{\prime}\hat{u}) =
+E(tr(\hat{u}^{\prime}\hat{u})) = E(tr(\hat{u}u^{\prime}))\]</span></p>
+<p>• <em>(i.)</em> O traço é uma transformação linear nos elementos de
+uma matriz</p>
+<p>seja <span class="math inline">\(E(tr(\hat{u}^{\prime}\hat{u}))\)</span> e
+definindo <span class="math inline">\(tr(\hat{u}^{\prime}\hat{u}) =
+A\)</span>, temos:</p>
+<p><span class="math display">\[E \left (\sum_{i=1}^{n} a_{ii} \right
+)\]</span></p>
+<p><span class="math display">\[E \left (\sum_{i=1}^{n} a_{ii} \right )
+= \sum_{i=1}^{n} E \left ( a_{ii} \right ) = \sum_{i=1}^{n} E_{ii} \left
+( A^{\prime} \right ) = \sum_{i=1}^{n} E_{ii} \left (
+\hat{u}^{\prime}\hat{u} \right ) = tr (E \left ( \hat{u}^{\prime}\hat{u}
+\right ))\]</span></p>
+<p>Continuando, obtemos:</p>
+<p><span class="math display">\[tr (E \left ( \hat{u}\hat{u}^{\prime}
+\right )) = tr (E \left ( \hat{u}\hat{u}^{\prime} \right ) -
+E(\hat{u})E(\hat{u})^{\prime}) = tr(Var(\hat{u}))\]</span></p>
+<p>• <em>(ii.)</em> Vale ressaltar que:</p>
+<p><span class="math inline">\(Var(\hat{u}) = Var((I-H)Y) = (I -
+H)Var(Y)(I-H)^{\prime}\)</span> <span class="math inline">\(\Rightarrow
+Var(\hat{u}) = (I-H)(I-H)^\prime\sigma^2 = (I-H)\sigma^2\)</span></p>
+<p>portanto, temos: <span class="math inline">\(tr(I -
+H)\sigma^2\)</span></p>
+<p>• <em>(iii.)</em> Ademais, analisando <span class="math inline">\(tr(I - H)\)</span>, temos:</p>
+<p><span class="math inline">\(tr(I_{\sim} - H) = tr(I_{\sim}) - tr(H) =
+n-tr[X(X^{\prime}X)^{-1}X^{\prime}]\)</span> <span class="math inline">\(= n-tr[(X^{\prime}X)^{-1}X^{\prime}X] = n -
+tr(I_{k}) = n - k\)</span></p>
+<p>Assim, obtemos:</p>
+<p><span class="math display">\[tr(I - H)\sigma^2 =
+n-k\sigma^{2}\]</span></p>
+<p>Portanto, o <strong>estimador não viezado: <span class="math inline">\(\frac{\hat{u}^{\prime}\hat{u}}{(n-k)}\)</span></strong>.</p>
 </div>
 <div id="questão-3-1" class="section level2">
 <h2>Questão 3</h2>
 <p>Mostre que <span class="math inline">\(R^2\)</span> nunca diminui
 quando incluimos novas variáveis no modelo.</p>
+<p><strong><em>Resposta:</em></strong></p>
+<p>Formas quadráticas das soma de quadrados:</p>
+<p><span class="math display">\[SQT = \sum(Y_i-\bar{Y})^2 =
+Y^\prime(I-n^{-1}J)Y\]</span> <span class="math display">\[SQM =
+\sum(Y_i - \bar{Y})^2 = Y^\prime(H-n^{-1}J)Y\]</span> <span class="math display">\[SQR = \sum(Y_i-\hat{Y}_i) =
+Y^\prime(I-H)Y\]</span></p>
+<p><span class="math inline">\(R^2 = \frac{SQM}{SQT}\)</span>, vale
+ressaltar que não depende de <span class="math inline">\(X\)</span>,
+logo basta verificarmos <span class="math inline">\(SQM\)</span>, e ver
+se ele aumenta ou diminui com a inserção de novas variáveis ao modelo
+<span class="math inline">\(SQR = Y^{\prime}(H-n^{-1}J)Y^{\prime} =
+tr(Y^{\prime}(H-n^{-1}J)Y) = tr(Y^{\prime}Y(H - n^{-1}J)) =
+tr(y(H-n^{-1}J))\)</span>, onde <span class="math inline">\(y\)</span>
+escalar positivo, <span class="math inline">\(y~tr(H-n^{-1}J)
+\Rightarrow y~tr(H-n^{-1}J) \Rightarrow y~tr(H)-yn^{-1}tr(J)\)</span>,
+como <span class="math inline">\(n^{-1}tr(J)\)</span> fixo <span class="math inline">\(SQR\)</span> tem seu aumento ou decremento
+determinado por <span class="math inline">\(tr(H)\)</span> ao
+adicionarmos variaveis ao modelo, sabemos que <span class="math inline">\(tr(H) = k\)</span>, <span class="math inline">\(k\)</span> número de parametros do modelo, lodo ao
+adicionarmos uma variavel <span class="math inline">\(K_{(novo)} =
+K_{(antigo)}^{+1}\)</span>, que implica no aumento de <span class="math inline">\(SQR\)</span> e consequentemente de <span class="math inline">\(R^2\)</span>.</p>
 </div>
-<div id="questão-4-1" class="section level2">
-<h2>Questão 4</h2>
+<div id="questão-4-1" class="section level2 tabset tabset-pills">
+<h2 class="tabset tabset-pills">Questão 4</h2>
 <p>Utilize o dataset HTV, estime o modelo de regresão</p>
 <p><span class="math display">\[educ = \beta_{0} + \beta_{1}motheduc +
-\beta_{2}fatheduc + \beta_{3}abil + \beta_{4}abil^2 + u\]</span></p>
+\beta_{2}fatheduc + \beta_{3}abil + \beta_{4}abil^{~2} + u\]</span></p>
 <p>e interplete os resultados.</p>
+<p><strong><em>Resposta:</em></strong></p>
+<p>Seja o estimadores de regressão para os software:</p>
+<div id="r-11" class="section level3">
+<h3>R</h3>
+<pre class="r"><code>data(&quot;htv&quot;)
+modelo = lm(educ~motheduc+fatheduc+abil+I(abil^2),data=htv)
+summary(modelo) </code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = educ ~ motheduc + fatheduc + abil + I(abil^2), data = htv)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.2506 -1.1274 -0.1355  1.0223  7.0482 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 8.240226   0.287410  28.671  &lt; 2e-16 ***
+## motheduc    0.190126   0.028096   6.767 2.03e-11 ***
+## fatheduc    0.108939   0.019601   5.558 3.35e-08 ***
+## abil        0.401462   0.030288  13.255  &lt; 2e-16 ***
+## I(abil^2)   0.050599   0.008304   6.093 1.48e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.758 on 1225 degrees of freedom
+## Multiple R-squared:  0.4444, Adjusted R-squared:  0.4425 
+## F-statistic: 244.9 on 4 and 1225 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Podemos perceber que todas as variaveis são significativas para o
+modelo:</p>
+<p><span class="math display">\[\frac{\Delta\hat{y}}{\Delta{abil}}
+\approx (0.4 + 2 \cdot 0.5 \cdot abil)\]</span></p>
+<p>E interpretar o efeito de <span class="math inline">\(abil -
+0.4\)</span> é interpretado como a inclinação da alteração de <span class="math inline">\(abil = 0\)</span> para <span class="math inline">\(abil = 1\)</span>.</p>
+<p>Ademais, para interpretar o efeito de todos os coeficientes
+polinomiais para <span class="math inline">\(abil&gt;0\)</span>, podemos
+considerar:</p>
+<p><span class="math display">\[\Delta\hat{y} \approx  (0.4 + 2 \cdot
+0.5 \cdot abil)\Delta{abil}\]</span></p>
+<ul>
+<li>Menos uma unidade em <span class="math inline">\(abil\)</span>
+possui um efeito em <span class="math inline">\(educ\)</span> de <span class="math inline">\(0.4 + 2 \cdot 0.5 \cdot (-1) = -1.4\)</span>
+unidades.</li>
+<li>Uma unidade de <span class="math inline">\(abil\)</span> possui um
+efeito em <span class="math inline">\(educ\)</span> de <span class="math inline">\(0.4 + 2 \cdot 0.5 \cdot 1 = 1.4\)</span>
+unidades.</li>
+<li>Duas unidade de <span class="math inline">\(abil\)</span> possui um
+efeito em <span class="math inline">\(educ\)</span> de <span class="math inline">\(0.4 + 2 \cdot 0.5 \cdot 2 = 2.4\)</span>
+unidades.</li>
+</ul>
+<p>Ponto de infleção <span class="math inline">\(abil^{*}=−0.4\)</span>.
+Isto é, <span class="math inline">\(abil &lt; 0.4\)</span> possui um
+efeito negativo em <span class="math inline">\(educ\)</span>.</p>
+</div>
+<div id="python-11" class="section level3">
+<h3>Python</h3>
+<pre class="python"><code>htv_pyt = wd.data(&#39;HTV&#39;)
+
+reg_htv = smf.ols(
+  formula=&#39;educ ~ motheduc + fatheduc + abil + I(abil**2)&#39;,
+  data=htv_pyt)
+  
+fit_htv = reg_htv.fit()
+
+# print regression table:
+table = pd.DataFrame({&#39;Estimate&#39;: round(fit_htv.params, 4),
+                      &#39;Std. Error&#39;: round(fit_htv.bse, 4),
+                      &#39;t value&#39;: round(fit_htv.tvalues, 4),
+                      &#39;Pr(&gt;|t|)&#39;: round(fit_htv.pvalues, 4)})
+                      
+print(f&#39;table: \n{table}\n&#39;)</code></pre>
+<pre><code>## table: 
+##               Estimate  Std. Error  t value  Pr(&gt;|t|)
+## Intercept       8.2402      0.2874  28.6706       0.0
+## motheduc        0.1901      0.0281   6.7671       0.0
+## fatheduc        0.1089      0.0196   5.5577       0.0
+## abil            0.4015      0.0303  13.2550       0.0
+## I(abil ** 2)    0.0506      0.0083   6.0934       0.0</code></pre>
+<p>Podemos perceber que todas as variaveis são significativas para o
+modelo:</p>
+<p><span class="math display">\[\frac{\Delta\hat{y}}{\Delta{abil}}
+\approx (0.4 + 2 \cdot 0.5 \cdot abil)\]</span></p>
+<p>E interpretar o efeito de <span class="math inline">\(abil -
+0.4\)</span> é interpretado como a inclinação da alteração de <span class="math inline">\(abil = 0\)</span> para <span class="math inline">\(abil = 1\)</span>.</p>
+<p>Ademais, para interpretar o efeito de todos os coeficientes
+polinomiais para <span class="math inline">\(abil&gt;0\)</span>, podemos
+considerar:</p>
+<p><span class="math display">\[\Delta\hat{y} \approx  (0.4 + 2 \cdot
+0.5 \cdot abil)\Delta{abil}\]</span></p>
+<ul>
+<li>Menos uma unidade em <span class="math inline">\(abil\)</span>
+possui um efeito em <span class="math inline">\(educ\)</span> de <span class="math inline">\(0.4 + 2 \cdot 0.5 \cdot (-1) = -1.4\)</span>
+unidades.</li>
+<li>Uma unidade de <span class="math inline">\(abil\)</span> possui um
+efeito em <span class="math inline">\(educ\)</span> de <span class="math inline">\(0.4 + 2 \cdot 0.5 \cdot 1 = 1.4\)</span>
+unidades.</li>
+<li>Duas unidade de <span class="math inline">\(abil\)</span> possui um
+efeito em <span class="math inline">\(educ\)</span> de <span class="math inline">\(0.4 + 2 \cdot 0.5 \cdot 2 = 2.4\)</span>
+unidades.</li>
+</ul>
+<p>Ponto de infleção <span class="math inline">\(abil^{*}=−0.4\)</span>.
+Isto é, <span class="math inline">\(abil &lt; 0.4\)</span> possui um
+efeito negativo em <span class="math inline">\(educ\)</span>.</p>
+</div>
 </div>
 </div>
 

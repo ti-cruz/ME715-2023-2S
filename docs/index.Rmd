@@ -51,6 +51,8 @@ import pandas as pd
 from scipy.stats import pearsonr
 import wooldridge as wd
 import math
+import numpy as np
+import statsmodels.formula.api as smf
 ```
 
 ## Julia
@@ -386,20 +388,162 @@ Verifique qual a proporção de mulheres que não fumaram durante a gravidez na 
 
 ## Questão 1
 
-Prove que $M = I − X(X′X)−1X′$ é simétrica e idempotente.
+Prove que $M = I − X(X^{\prime}X)^{−1}X^{\prime}$ é simétrica e idempotente.
+
+***Resposta: ***
+
+• *(i.)* Verificando se é simetrica a seguinte operação:
+$(X^{\prime}X) = X^{\prime}X^{\prime^{~\prime}} = X^{\prime}X$, **é simétrica**.
+
+Vale ressaltar o seguinte teorema: seja uma matriz $A$ não singular simetrica, logo $A^{-1}$ também é simétrica. Alias, segue abaixo a prova mais detalhada:
+
+Prova: $(A^{-1}A)^t = A^t(A^{-1})^t$
+
+$$\Rightarrow A(A^{-1})^t = AA^{-1}$$
+$$\Rightarrow A^{-1}A(A^{-1})^t=A^{-1}AA^{-1}$$
+$$(A^{-1})^t = A^{-1}$$
+
+Desse modo, podemos definir que **$(X^{\prime}X)^{-1}$ é simétrica.**
+
+
+• *(ii.)* Verificando a seguinte simétria: 
+
+$$[X(X^{\prime}X)^{-1}X^{\prime}]^{\prime} = X^{\prime^{~\prime}}(X^{\prime}X)^{{-1}^\prime}X^{\prime} = X(X^{\prime}X)^{-1}X^{\prime}$$
+
+Assim, $X(X^{\prime}X)^{-1}X^{\prime}$ **é simetrica**.
+
+• *(iii.)* Ademais, aplicando os resultados obtidos em *(i.)* e *(ii.)* para analisar se $M$ é idempotente, obtemos:
+
+ $$HH = X(X^{\prime}X)^{-1}X^{\prime}X(X^{\prime}X)^{-1}X^{\prime} = XI(X^{\prime}X)^{-1}X^{\prime} = X(X^{\prime}X)^{-1}X^{\prime} = H$$
+
+Como **$H$ é idempotente**, logo temos:
+
+$$MM = (I-H)(I-H) = II - IH - HI + HH = I - H - H + H = (I-H) = M$$
+
+Assim $M$ **é idempotente**.
 
 ## Questão 2
 
 Mostre que $s^2 = \frac{\hat{u}'\hat{u}}{n-k-1}$ é um estimador não viesado para $\sigma^2$.
 
+***Resposta:***
+
+$$E(\hat{u}) = E(Y) - E(X\hat{\beta}) = E(XB) + E(u) - E(X\hat{\beta})$$
+$$E(X\beta) - E(X\hat{\beta}) = X\beta - X\hat{\beta} = 0$$
+$$E(\hat{u}^{\prime}\hat{u}) = E(tr(\hat{u}^{\prime}\hat{u})) = E(tr(\hat{u}u^{\prime}))$$
+
+• *(i.)* O traço é uma transformação linear nos elementos de uma matriz
+
+seja $E(tr(\hat{u}^{\prime}\hat{u}))$ e definindo $tr(\hat{u}^{\prime}\hat{u}) = A$, temos:
+
+$$E \left (\sum_{i=1}^{n} a_{ii} \right )$$
+
+$$E \left (\sum_{i=1}^{n} a_{ii} \right ) = \sum_{i=1}^{n} E \left ( a_{ii} \right ) = \sum_{i=1}^{n} E_{ii} \left ( A^{\prime} \right ) = \sum_{i=1}^{n} E_{ii} \left ( \hat{u}^{\prime}\hat{u} \right ) = tr (E \left ( \hat{u}^{\prime}\hat{u} \right ))$$
+
+Continuando, obtemos:
+
+$$tr (E \left ( \hat{u}\hat{u}^{\prime} \right )) = tr (E \left ( \hat{u}\hat{u}^{\prime} \right ) - E(\hat{u})E(\hat{u})^{\prime}) = tr(Var(\hat{u}))$$
+
+• *(ii.)* Vale ressaltar que: 
+
+$Var(\hat{u}) = Var((I-H)Y) = (I - H)Var(Y)(I-H)^{\prime}$
+$\Rightarrow Var(\hat{u}) = (I-H)(I-H)^\prime\sigma^2 = (I-H)\sigma^2$
+
+portanto, temos: $tr(I - H)\sigma^2$
+
+• *(iii.)* Ademais, analisando $tr(I - H)$, temos:
+
+$tr(I_{\sim} - H) = tr(I_{\sim}) - tr(H) = n-tr[X(X^{\prime}X)^{-1}X^{\prime}]$
+$= n-tr[(X^{\prime}X)^{-1}X^{\prime}X] = n - tr(I_{k}) = n - k$
+
+Assim, obtemos:
+
+$$tr(I - H)\sigma^2 = n-k\sigma^{2}$$
+
+Portanto, o **estimador não viezado: $\frac{\hat{u}^{\prime}\hat{u}}{(n-k)}$**.
+
 ## Questão 3
 
 Mostre que $R^2$ nunca diminui quando incluimos novas variáveis no modelo.
 
-## Questão 4
+***Resposta:***
+
+Formas quadráticas das soma de quadrados:
+
+$$SQT = \sum(Y_i-\bar{Y})^2 = Y^\prime(I-n^{-1}J)Y$$
+$$SQM = \sum(Y_i - \bar{Y})^2 = Y^\prime(H-n^{-1}J)Y$$
+$$SQR = \sum(Y_i-\hat{Y}_i) = Y^\prime(I-H)Y$$
+
+$R^2 = \frac{SQM}{SQT}$, vale ressaltar que não depende de $X$,
+logo basta verificarmos $SQM$, e ver se ele aumenta ou diminui com a inserção de novas variáveis ao modelo $SQR = Y^{\prime}(H-n^{-1}J)Y^{\prime} = tr(Y^{\prime}(H-n^{-1}J)Y) = tr(Y^{\prime}Y(H - n^{-1}J)) = tr(y(H-n^{-1}J))$, onde $y$ escalar positivo, $y~tr(H-n^{-1}J) \Rightarrow y~tr(H-n^{-1}J)  \Rightarrow y~tr(H)-yn^{-1}tr(J)$, como $n^{-1}tr(J)$ fixo $SQR$ tem seu aumento ou decremento determinado por $tr(H)$ ao adicionarmos variaveis ao modelo, sabemos que $tr(H) = k$, $k$ número de parametros do modelo, lodo ao adicionarmos uma variavel $K_{(novo)} = K_{(antigo)}^{+1}$, que implica no aumento de $SQR$ e consequentemente de $R^2$. 
+
+## Questão 4 {.tabset .tabset-pills}
 
 Utilize o dataset HTV, estime o modelo de regresão
 
-$$educ = \beta_{0} + \beta_{1}motheduc + \beta_{2}fatheduc + \beta_{3}abil + \beta_{4}abil^2 + u$$
+$$educ = \beta_{0} + \beta_{1}motheduc + \beta_{2}fatheduc + \beta_{3}abil + \beta_{4}abil^{~2} + u$$
 
 e interplete os resultados.
+
+***Resposta:***
+
+Seja o estimadores de regressão para os software:
+
+### R
+```{r}
+data("htv")
+modelo = lm(educ~motheduc+fatheduc+abil+I(abil^2),data=htv)
+summary(modelo) 
+```
+
+Podemos perceber que todas as variaveis são significativas para o modelo:
+
+$$\frac{\Delta\hat{y}}{\Delta{abil}} \approx (0.4 + 2 \cdot 0.5 \cdot abil)$$
+
+E interpretar o efeito de $abil - 0.4$ é interpretado como a inclinação da alteração de $abil = 0$ para $abil = 1$.
+
+Ademais, para interpretar o efeito de todos os coeficientes polinomiais para $abil>0$, podemos considerar:
+
+$$\Delta\hat{y} \approx  (0.4 + 2 \cdot 0.5 \cdot abil)\Delta{abil}$$
+
+  - Menos uma unidade em $abil$ possui um efeito em $educ$ de $0.4 + 2 \cdot 0.5 \cdot (-1) = -1.4$ unidades.
+  - Uma unidade de $abil$ possui um efeito em $educ$ de $0.4 + 2 \cdot 0.5 \cdot 1 = 1.4$ unidades.
+  - Duas unidade de $abil$ possui um efeito em $educ$ de $0.4 + 2 \cdot 0.5 \cdot 2 = 2.4$ unidades.
+
+Ponto de infleção $abil^{*}=−0.4$. Isto é, $abil < 0.4$ possui um efeito negativo em $educ$.
+
+### Python
+
+```{python}
+htv_pyt = wd.data('HTV')
+
+reg_htv = smf.ols(
+  formula='educ ~ motheduc + fatheduc + abil + I(abil**2)',
+  data=htv_pyt)
+  
+fit_htv = reg_htv.fit()
+
+# print regression table:
+table = pd.DataFrame({'Estimate': round(fit_htv.params, 4),
+                      'Std. Error': round(fit_htv.bse, 4),
+                      't value': round(fit_htv.tvalues, 4),
+                      'Pr(>|t|)': round(fit_htv.pvalues, 4)})
+                      
+print(f'table: \n{table}\n')
+```
+
+Podemos perceber que todas as variaveis são significativas para o modelo:
+
+$$\frac{\Delta\hat{y}}{\Delta{abil}} \approx (0.4 + 2 \cdot 0.5 \cdot abil)$$
+
+E interpretar o efeito de $abil - 0.4$ é interpretado como a inclinação da alteração de $abil = 0$ para $abil = 1$.
+
+Ademais, para interpretar o efeito de todos os coeficientes polinomiais para $abil>0$, podemos considerar:
+
+$$\Delta\hat{y} \approx  (0.4 + 2 \cdot 0.5 \cdot abil)\Delta{abil}$$
+
+  - Menos uma unidade em $abil$ possui um efeito em $educ$ de $0.4 + 2 \cdot 0.5 \cdot (-1) = -1.4$ unidades.
+  - Uma unidade de $abil$ possui um efeito em $educ$ de $0.4 + 2 \cdot 0.5 \cdot 1 = 1.4$ unidades.
+  - Duas unidade de $abil$ possui um efeito em $educ$ de $0.4 + 2 \cdot 0.5 \cdot 2 = 2.4$ unidades.
+
+Ponto de infleção $abil^{*}=−0.4$. Isto é, $abil < 0.4$ possui um efeito negativo em $educ$.
