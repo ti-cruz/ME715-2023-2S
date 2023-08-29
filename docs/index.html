@@ -2864,7 +2864,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Listas - ME715</h1>
 <h3 class="subtitle"><i>Período: 2023/2S</i></h3>
 <h4 class="author"><b>Nome: </b> Tiago Henrique da Cruz <br></h4>
-<h4 class="date"><b>Último atualização:</b> 24 de agosto, 2023</h4>
+<h4 class="date"><b>Último atualização:</b> 29 de agosto, 2023</h4>
 
 </div>
 
@@ -2898,7 +2898,8 @@ from scipy.stats import pearsonr
 import wooldridge as wd
 import math
 import numpy as np
-import statsmodels.formula.api as smf</code></pre>
+import statsmodels.formula.api as smf
+import scipy.stats as stats</code></pre>
 </div>
 <div id="julia" class="section level2">
 <h2>Julia</h2>
@@ -3516,6 +3517,84 @@ unidades.</li>
 Isto é, <span class="math inline">\(abil &lt; 0.4\)</span> possui um
 efeito negativo em <span class="math inline">\(educ\)</span>.</p>
 </div>
+</div>
+</div>
+<div id="lista-4" class="section level1 tabset tabset-fade">
+<h1 class="tabset tabset-fade">Lista 4</h1>
+<div id="questão-1-3" class="section level2">
+<h2>Questão 1</h2>
+</div>
+<div id="questão-2-3" class="section level2">
+<h2>Questão 2</h2>
+</div>
+<div id="questão-3-2" class="section level2 tabset tabset-fade">
+<h2 class="tabset tabset-fade">Questão 3</h2>
+<p>O dataset <code>rdchem</code> contém informação de 32 empresas da
+industria química. Entre as in- formações coletadas, temos:
+<code>rdintens</code> (gastos com pesquisa e desenvolvimento como
+uma</p>
+<p>porcentagem das vendas), <code>sales</code> (vendas mensuradas em
+mlhões de dólares) e <code>profmarg</code> (lucros como uma porcentagem
+das vendas). Ajuste um modelo da forma</p>
+<p><span class="math display">\[rdintens = \beta_{0} +
+\beta_{1}log(sales) + \beta_{2}profmarg + u\]</span>.</p>
+<p>Assumindo que as hipóteses do modelos linear clássico acontecem:</p>
+<div id="a" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">a)</h3>
+<p>Interprete o coeficiente de log(sales).</p>
+<p><strong><em>Resposta:</em></strong></p>
+<div id="python-12" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>rdchem_pyt = wd.data(&#39;rdchem&#39;)
+
+rdchem_fit = smf.ols(
+  formula=&#39;rdintens ~ np.log(sales) + profmarg&#39;,
+  data=rdchem_pyt)
+  
+rdchem_fit = rdchem_fit.fit()
+
+# print regression table:
+table = pd.DataFrame({&#39;Estimate&#39;: round(rdchem_fit.params, 4),
+                      &#39;Std. Error&#39;: round(rdchem_fit.bse, 4),
+                      &#39;t value&#39;: round(rdchem_fit.tvalues, 4),
+                      &#39;Pr(&gt;|t|)&#39;: round(rdchem_fit.pvalues, 4)})
+
+#print(f&#39;rdchem_fit.summary(): \n{rdchem_fit.summary()}\n&#39;)                      
+print(f&#39;table: \n{table}\n&#39;)</code></pre>
+<pre><code>## table: 
+##                Estimate  Std. Error  t value  Pr(&gt;|t|)
+## Intercept        0.4723      1.6761   0.2818    0.7801
+## np.log(sales)    0.3213      0.2156   1.4907    0.1468
+## profmarg         0.0500      0.0458   1.0931    0.2834</code></pre>
+<pre class="python"><code># CV para alfa = 5% e 1% usando a distribuição t com n-k-1 d.f.:
+n = len(rdchem_pyt)
+k = 2
+nk_1 = n-k-1
+
+#alpha = 0.05
+
+#cv_t = stats.t.ppf(1 - alpha / 2, nk_1)
+#print(f&#39;cv_t: {cv_t}\n&#39;)
+
+# CV for alpha=5% using the normal approximation:
+#cv_n = stats.norm.ppf(1 - alpha / 2)
+#print(f&#39;cv_n: {cv_n}\n&#39;)
+
+rdchem_fit_r2 = rdchem_fit.rsquared
+print(f&#39;rdchem_fit_r2: {rdchem_fit_r2}\n&#39;)</code></pre>
+<pre><code>## rdchem_fit_r2: 0.09847246709461321</code></pre>
+<pre class="python"><code>
+
+# F statistic:
+#fstat = (rdchem_fit_r2 - r2_r) / (1 - rdchem_fit_r2) * (n - 6) / 3
+#print(f&#39;fstat: {fstat}\n&#39;)
+
+## Pag 124, livro</code></pre>
+</div>
+</div>
+</div>
+<div id="questão-4-2" class="section level2">
+<h2>Questão 4</h2>
 </div>
 </div>
 

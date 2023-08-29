@@ -53,6 +53,7 @@ import wooldridge as wd
 import math
 import numpy as np
 import statsmodels.formula.api as smf
+import scipy.stats as stats
 ```
 
 ## Julia
@@ -547,3 +548,81 @@ $$\Delta\hat{y} \approx  (0.4 + 2 \cdot 0.5 \cdot abil)\Delta{abil}$$
   - Duas unidade de $abil$ possui um efeito em $educ$ de $0.4 + 2 \cdot 0.5 \cdot 2 = 2.4$ unidades.
 
 Ponto de infleção $abil^{*}=−0.4$. Isto é, $abil < 0.4$ possui um efeito negativo em $educ$.
+
+# Lista 4 {.tabset .tabset-fade}
+
+## Questão 1 
+
+## Questão 2
+
+## Questão 3 {.tabset .tabset-fade}
+O dataset `rdchem` contém informação de 32 empresas da industria química. Entre as in-
+formações coletadas, temos: `rdintens` (gastos com pesquisa e desenvolvimento como uma
+
+porcentagem das vendas), `sales` (vendas mensuradas em mlhões de dólares) e `profmarg`
+(lucros como uma porcentagem das vendas). Ajuste um modelo da forma
+
+$$rdintens = \beta_{0} + \beta_{1}log(sales) + \beta_{2}profmarg + u$$.
+
+Assumindo que as hipóteses do modelos linear clássico acontecem:
+
+### a) {.tabset .tabset-pills}
+
+Interprete o coeficiente de log(sales).
+
+***Resposta:***
+
+#### Python
+
+```{python}
+rdchem_pyt = wd.data('rdchem')
+
+rdchem_fit = smf.ols(
+  formula='rdintens ~ np.log(sales) + profmarg',
+  data=rdchem_pyt)
+  
+rdchem_fit = rdchem_fit.fit()
+
+# print regression table:
+table = pd.DataFrame({'Estimate': round(rdchem_fit.params, 4),
+                      'Std. Error': round(rdchem_fit.bse, 4),
+                      't value': round(rdchem_fit.tvalues, 4),
+                      'Pr(>|t|)': round(rdchem_fit.pvalues, 4)})
+
+#print(f'rdchem_fit.summary(): \n{rdchem_fit.summary()}\n')                      
+print(f'table: \n{table}\n')
+
+
+```
+
+```{python}
+# CV para alfa = 5% e 1% usando a distribuição t com n-k-1 d.f.:
+n = len(rdchem_pyt)
+k = 2
+nk_1 = n-k-1
+
+#alpha = 0.05
+
+#cv_t = stats.t.ppf(1 - alpha / 2, nk_1)
+#print(f'cv_t: {cv_t}\n')
+
+# CV for alpha=5% using the normal approximation:
+#cv_n = stats.norm.ppf(1 - alpha / 2)
+#print(f'cv_n: {cv_n}\n')
+
+rdchem_fit_r2 = rdchem_fit.rsquared
+print(f'rdchem_fit_r2: {rdchem_fit_r2}\n')
+
+
+# F statistic:
+#fstat = (rdchem_fit_r2 - r2_r) / (1 - rdchem_fit_r2) * (n - 6) / 3
+#print(f'fstat: {fstat}\n')
+
+## Pag 124, livro
+```
+
+
+
+
+
+## Questão 4
