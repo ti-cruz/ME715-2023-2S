@@ -2864,7 +2864,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Listas - ME715</h1>
 <h3 class="subtitle"><i>Período: 2023/2S</i></h3>
 <h4 class="author"><b>Nome: </b> Tiago Henrique da Cruz <br></h4>
-<h4 class="date"><b>Último atualização:</b> 29 de agosto, 2023</h4>
+<h4 class="date"><b>Último atualização:</b> 31 de agosto, 2023</h4>
 
 </div>
 
@@ -2894,15 +2894,13 @@ library(wooldridge)
 <div id="python" class="section level2">
 <h2>Python</h2>
 <pre class="python"><code>import pandas as pd
-from scipy.stats import pearsonr
 import wooldridge as wd
 import math
 import numpy as np
 import statsmodels.formula.api as smf
-import scipy.stats as stats</code></pre>
-</div>
-<div id="julia" class="section level2">
-<h2>Julia</h2>
+import scipy.stats as stats
+import statsmodels as hip
+from scipy.stats import t</code></pre>
 </div>
 </div>
 <div id="instruções" class="section level1">
@@ -3047,9 +3045,6 @@ forte.</p>
 <div id="python-5" class="section level4">
 <h4>Python</h4>
 <p>O que pode concluir?</p>
-<pre class="python"><code>print(&#39;Temos a correlação entre math4 e read4 de: %.4f&#39; % 
-      pearsonr(meap01_pyt[&#39;math4&#39;], meap01_pyt[&#39;read4&#39;])[0])</code></pre>
-<pre><code>## Temos a correlação entre math4 e read4 de: 0.8427</code></pre>
 </div>
 </div>
 <div id="item-e" class="section level3 tabset tabset-pills">
@@ -3530,18 +3525,17 @@ efeito negativo em <span class="math inline">\(educ\)</span>.</p>
 <div id="questão-3-2" class="section level2 tabset tabset-fade">
 <h2 class="tabset tabset-fade">Questão 3</h2>
 <p>O dataset <code>rdchem</code> contém informação de 32 empresas da
-industria química. Entre as in- formações coletadas, temos:
-<code>rdintens</code> (gastos com pesquisa e desenvolvimento como
-uma</p>
-<p>porcentagem das vendas), <code>sales</code> (vendas mensuradas em
-mlhões de dólares) e <code>profmarg</code> (lucros como uma porcentagem
-das vendas). Ajuste um modelo da forma</p>
+industria química. Entre as informações coletadas, temos:
+<code>rdintens</code> (gastos com pesquisa e desenvolvimento como uma
+porcentagem das vendas), <code>sales</code> (vendas mensuradas em mlhões
+de dólares) e <code>profmarg</code> (lucros como uma porcentagem das
+vendas). Ajuste um modelo da forma</p>
 <p><span class="math display">\[rdintens = \beta_{0} +
 \beta_{1}log(sales) + \beta_{2}profmarg + u\]</span>.</p>
 <p>Assumindo que as hipóteses do modelos linear clássico acontecem:</p>
-<div id="a" class="section level3 tabset tabset-pills">
-<h3 class="tabset tabset-pills">a)</h3>
-<p>Interprete o coeficiente de log(sales).</p>
+<div id="item-a-3" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item a)</h3>
+<p>Interprete o coeficiente de log(<code>sales</code>).</p>
 <p><strong><em>Resposta:</em></strong></p>
 <div id="python-12" class="section level4">
 <h4>Python</h4>
@@ -3551,50 +3545,238 @@ rdchem_fit = smf.ols(
   formula=&#39;rdintens ~ np.log(sales) + profmarg&#39;,
   data=rdchem_pyt)
   
-rdchem_fit = rdchem_fit.fit()
+result = rdchem_fit.fit()
 
 # print regression table:
-table = pd.DataFrame({&#39;Estimate&#39;: round(rdchem_fit.params, 4),
-                      &#39;Std. Error&#39;: round(rdchem_fit.bse, 4),
-                      &#39;t value&#39;: round(rdchem_fit.tvalues, 4),
-                      &#39;Pr(&gt;|t|)&#39;: round(rdchem_fit.pvalues, 4)})
+table = pd.DataFrame({&#39;Estimate&#39;: round(result.params, 4),\
+                      &#39;Std_Error&#39;: round(result.bse, 4)})
 
 #print(f&#39;rdchem_fit.summary(): \n{rdchem_fit.summary()}\n&#39;)                      
 print(f&#39;table: \n{table}\n&#39;)</code></pre>
 <pre><code>## table: 
-##                Estimate  Std. Error  t value  Pr(&gt;|t|)
-## Intercept        0.4723      1.6761   0.2818    0.7801
-## np.log(sales)    0.3213      0.2156   1.4907    0.1468
-## profmarg         0.0500      0.0458   1.0931    0.2834</code></pre>
-<pre class="python"><code># CV para alfa = 5% e 1% usando a distribuição t com n-k-1 d.f.:
-n = len(rdchem_pyt)
-k = 2
-nk_1 = n-k-1
+##                Estimate  Std_Error
+## Intercept        0.4723     1.6761
+## np.log(sales)    0.3213     0.2156
+## profmarg         0.0500     0.0458</code></pre>
+<p>Podemos reparar que a cada unidade de aumento de <code>sales</code>,
+a um inclemento de 0,003% em <code>rdintes</code>.</p>
+</div>
+</div>
+<div id="item-b-3" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item b)</h3>
+<p>Teste a hipóteses de que a intensidade de P&amp;D não varia com sales
+contra a alternativa de que P&amp;D aumenta com as vendas.</p>
+<p><strong><em>Resposta:</em></strong></p>
+<div id="python-13" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>est_test = table.Estimate[[&quot;np.log(sales)&quot;]]/table.Std_Error[[&quot;np.log(sales)&quot;]] 
+p_valor = 1 - t.cdf(est_test, len(rdchem_pyt))
 
-#alpha = 0.05
+print(f&#39;Com o p-valor de {p_valor[0].round(4)}, não temos evidencias para rejeitar H_0.&#39;)</code></pre>
+<pre><code>## Com o p-valor de 0.073, não temos evidencias para rejeitar H_0.</code></pre>
+</div>
+</div>
+<div id="item-c-3" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item c)</h3>
+<p>Interprete o coeficiente de <code>profmarg</code>, ele é
+economicamente grande?</p>
+<p><strong><em>Resposta:</em></strong></p>
+</div>
+<div id="item-d-3" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item d)</h3>
+<p><code>profmarg</code> tem um efeito estatisticamente significativo
+sobre <code>rdintens</code>?</p>
+<p><strong><em>Resposta:</em></strong></p>
+</div>
+</div>
+<div id="questão-4-2" class="section level2 tabset tabset-fade">
+<h2 class="tabset tabset-fade">Questão 4</h2>
+<p>Utilizando o dataset <code>gpa1</code>, ajuste um modelo que explique
+a nota média em um curso superior (<code>colGPA</code>) utilizando o
+número de faltas às aulas por semana (<code>skipped</code>), horas de
+estudo semanais (<code>hsGPA</code>) e a nota do <code>ACT</code>
+(equivalente ao vestitubular). Assumindo que as hipóteses do modelo
+linear clássico acontecem:</p>
+<div id="item-a-4" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item a)</h3>
+<p>Encontre um intervalo de confiança 95% para <span class="math inline">\(β_{hsGPA}\)</span>.</p>
+<p><strong><em>Resposta:</em></strong></p>
+<div id="python-14" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>gpa1_pyt = wd.data(&#39;gpa1&#39;)
 
-#cv_t = stats.t.ppf(1 - alpha / 2, nk_1)
-#print(f&#39;cv_t: {cv_t}\n&#39;)
+gpa1_mold = smf.ols(formula=&quot;colGPA ~ skipped + hsGPA + ACT&quot;, data=gpa1_pyt)
+results = gpa1_mold.fit()
 
-# CV for alpha=5% using the normal approximation:
-#cv_n = stats.norm.ppf(1 - alpha / 2)
-#print(f&#39;cv_n: {cv_n}\n&#39;)
+print(results.conf_int(0.05))</code></pre>
+<pre><code>##                   0         1
+## Intercept  0.733930  2.045178
+## skipped   -0.134523 -0.031703
+## hsGPA      0.226582  0.597050
+## ACT       -0.006171  0.035612</code></pre>
+<p>Como podemos reparar, para o intervalo de confiança de 95% da
+variavél <code>hsGPA</code> temos: [0.2266, 0.5971]</p>
+</div>
+</div>
+<div id="item-b-4" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item b)</h3>
+<p>Teste <span class="math inline">\(H_0: \beta_{hsGPA} = 0.4 ~ vs. ~
+H_1: \beta_{hsGPA} \neq 0.4\)</span></p>
+<p><strong><em>Resposta:</em></strong></p>
+<div id="python-15" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>table = pd.DataFrame({&#39;Estimate&#39;: round(results.params, 4),
+                      &#39;Std_Error&#39;: round(results.bse, 4)})
 
-rdchem_fit_r2 = rdchem_fit.rsquared
-print(f&#39;rdchem_fit_r2: {rdchem_fit_r2}\n&#39;)</code></pre>
-<pre><code>## rdchem_fit_r2: 0.09847246709461321</code></pre>
-<pre class="python"><code>
+est_test = (table.Estimate[[&quot;hsGPA&quot;]] - 0.4)/table.Std_Error[[&quot;hsGPA&quot;]]
 
-# F statistic:
-#fstat = (rdchem_fit_r2 - r2_r) / (1 - rdchem_fit_r2) * (n - 6) / 3
-#print(f&#39;fstat: {fstat}\n&#39;)
+p_valor = 2 * t.cdf(-abs(est_test), len(rdchem_pyt))
 
-## Pag 124, livro</code></pre>
+print(f&#39;Com o p-valor de {p_valor[0].round(4)}, não temos evidencias para rejeitar H_0.&#39;)</code></pre>
+<pre><code>## Com o p-valor de 0.9006, não temos evidencias para rejeitar H_0.</code></pre>
+</div>
+</div>
+<div id="item-c-4" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item c)</h3>
+<p>Você pode rejeitar a hipóteses <span class="math inline">\(H_0:
+\beta_{hsGPA} = 1\)</span> contra a alternativa bilateral?</p>
+<p><strong><em>Resposta:</em></strong></p>
+<div id="python-16" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>est_test = (table.Estimate[[&quot;hsGPA&quot;]] - 1)/table.Std_Error[[&quot;hsGPA&quot;]]
+
+p_valor = 2 * t.cdf(-abs(est_test), len(rdchem_pyt))
+
+print(f&#39;Com o p-valor de {p_valor[0].round(4)}, temos evidencias para rejeitar H_0.&#39;)</code></pre>
+<pre><code>## Com o p-valor de 0.0, temos evidencias para rejeitar H_0.</code></pre>
+</div>
+</div>
+<div id="item-d-4" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item d)</h3>
+<p>Teste a hipótese nula de que, uma vez tendo sido controlado as horas
+de estudo semanais, o efeito de <code>skipped</code> e <code>ACT</code>
+sobre <code>colGPA</code> são, conjuntamente, nulos.</p>
+<p><strong><em>Resposta:</em></strong></p>
+<div id="python-17" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>hipoteses = [&#39;skipped=0&#39;, &#39;ACT=0&#39;]
+test_f = results.f_test(hipoteses)
+print(f&#39;Como temos o teste F = {test_f.fvalue[0][0].round(4)} &gt; c = {test_f.pvalue.round(4).tolist()}, rejeitamos H0&#39;)</code></pre>
+<pre><code>## Como temos o teste F = 5.5179 &gt; c = 0.005, rejeitamos H0</code></pre>
 </div>
 </div>
 </div>
-<div id="questão-4-2" class="section level2">
-<h2>Questão 4</h2>
+<div id="questão-5" class="section level2 tabset tabset-fade">
+<h2 class="tabset tabset-fade">Questão 5</h2>
+<p>Utilize o conjunto de dados <code>wage2</code> e ajuste a
+regressão</p>
+<p><span class="math display">\[log(wage) =  \beta_0 + \beta_1educ +
+\beta_2exper + \beta_3tenure + \mu\]</span></p>
+<p>em que <code>wage</code> é o salario-hora em dolares,
+<code>educ</code> são os anos de educação formal, <code>exper</code> são
+os anos de experiência no mercado de trabalho e <code>tenure</code> são
+os anos de permanencia no emprego atual.</p>
+<div id="item-a-5" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item a)</h3>
+<p>Teste a hipótede de significância geral do modelo.</p>
+<p><strong><em>Resposta:</em></strong></p>
+<div id="python-18" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>wage2_pyt = wd.data(&#39;wage2&#39;)
+
+wage2_mold = smf.ols(formula=&quot;np.log(wage) ~ educ + exper + tenure&quot;, data=wage2_pyt)
+results = wage2_mold.fit()
+
+hipoteses = [&#39;educ=0&#39;, &#39;exper=0&#39;, &#39;tenure=0&#39;]
+
+test_f = results.f_test(hipoteses)
+
+print(f&#39;Como temos o teste F = {test_f.fvalue[0][0].round(4)} &gt; c = {test_f.pvalue.round(4).tolist()}, rejeitamos H0&#39;)</code></pre>
+<pre><code>## Como temos o teste F = 56.9739 &gt; c = 0.0, rejeitamos H0</code></pre>
+</div>
+</div>
+<div id="item-b-5" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item b)</h3>
+<p>Teste a hipótese de que um ano a mais de experiência no mercado de
+trabalho tem o mesmo efeito sobre log(<code>wage</code>) que mais um ano
+de permanencia no emprego atual.</p>
+<p><strong><em>Resposta:</em></strong></p>
+<div id="python-19" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>hipoteses = [&#39;exper=tenure&#39;]
+test_f = results.f_test(hipoteses)
+
+print(f&#39;Como temos o teste F = {test_f.fvalue[0][0].round(4)} &lt; c = {test_f.pvalue.round(4).tolist()}, não rejeitamos H0&#39;)</code></pre>
+<pre><code>## Como temos o teste F = 0.1696 &lt; c = 0.6805, não rejeitamos H0</code></pre>
+</div>
+</div>
+<div id="item-c-5" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item c)</h3>
+<p>Teste a hipótese de que, controlado o número de anos de permanencia
+no emprego (<code>tenure</code>), educ e exper não tem efeito nenhum
+sobre log(<code>wage</code>).</p>
+<p><strong><em>Resposta:</em></strong></p>
+<div id="python-20" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>hipoteses = [&#39;educ=0&#39;, &#39;exper=0&#39;]
+test_f = results.f_test(hipoteses)
+
+print(f&#39;Como temos o teste F = {test_f.fvalue[0][0].round(4)} &gt; c = {test_f.pvalue.round(4).tolist()}, rejeitamos H0&#39;)</code></pre>
+<pre><code>## Como temos o teste F = 66.4299 &gt; c = 0.0, rejeitamos H0</code></pre>
+</div>
+</div>
+</div>
+<div id="questão-6" class="section level2 tabset tabset-fade">
+<h2 class="tabset tabset-fade">Questão 6</h2>
+<p>Utilize o conjunto de dados <code>htv</code> e ajuste a regressão</p>
+<p><span class="math display">\[educ = \beta_0 + \beta_1motheduc +
+\beta_2fatheduc + \beta_3abil + \beta_4abil^2 + u\]</span></p>
+<div id="item-a-6" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item a)</h3>
+<p>Teste a hipóteses de que a influencia que motheduc e fatheduc exercem
+sobre educ é a mesma.</p>
+<p><strong><em>Resposta:</em></strong></p>
+<div id="python-21" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>htv_pyt = wd.data(&#39;htv&#39;)
+
+htv_pyt[&#39;abil2&#39;] = htv_pyt[&#39;abil&#39;]**2
+
+htv_fit = smf.ols(
+  formula=&#39;educ ~ motheduc + fatheduc + abil + abil2&#39;,
+  data=htv_pyt)
+
+result = htv_fit.fit()
+
+hipoteses = [&#39;motheduc=fatheduc&#39;]
+test_f = result.f_test(hipoteses)
+
+print(f&#39;Como temos o teste F = {test_f.fvalue[0][0].round(4)} &gt; c = {test_f.pvalue.round(4).tolist()}, rejeitamos H0&#39;) </code></pre>
+<pre><code>## Como temos o teste F = 3.7468 &gt; c = 0.0531, rejeitamos H0</code></pre>
+</div>
+</div>
+<div id="item-b-6" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item b)</h3>
+<p>Teste a hipótese de que educ está linearmente relacionado com abil
+contra a alter- nativa que diz que a relação é quadrática.</p>
+<p><strong><em>Resposta:</em></strong></p>
+</div>
+<div id="item-c-6" class="section level3 tabset tabset-pills">
+<h3 class="tabset tabset-pills">item c)</h3>
+<p>Um colega de trabalho diz que o modelo <span class="math inline">\(educ = \beta_0 + \beta_1abil + \beta_2abil^2 +
+\mi\)</span> é suficiente, e que tanto <code>motheduc</code> e
+<code>fatheduc</code> não são importantes para o modelos. Faça um teste
+de hipóteses para rejeitar ou não rejeitar a hipótese do seu colega.</p>
+<p><strong><em>Resposta:</em></strong></p>
+<div id="python-22" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>hipoteses = [&#39;motheduc=0&#39;,&#39;fatheduc=0&#39;]
+test_f = result.f_test(hipoteses)
+
+print(f&#39;Como temos o teste F = {test_f.fvalue[0][0].round(4)} &gt; c = {test_f.pvalue.round(4).tolist()}, rejeitamos H0.&#39;)</code></pre>
+<pre><code>## Como temos o teste F = 81.3326 &gt; c = 0.0, rejeitamos H0.</code></pre>
+</div>
+</div>
 </div>
 </div>
 

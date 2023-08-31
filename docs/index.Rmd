@@ -48,15 +48,15 @@ library(wooldridge)
 
 ```{python Pacotes_P, message=FALSE, warning=FALSE}
 import pandas as pd
-from scipy.stats import pearsonr
 import wooldridge as wd
 import math
 import numpy as np
 import statsmodels.formula.api as smf
 import scipy.stats as stats
+import statsmodels as hip
+from scipy.stats import t
 ```
 
-## Julia
 
 # Instruções
 
@@ -185,7 +185,7 @@ Podemos perceber que com `r corr_math_read` de correlação entre `math4` e `rea
 
 O que pode concluir?
 
-```{python}
+```{python eval=FALSE, include=FALSE}
 print('Temos a correlação entre math4 e read4 de: %.4f' % 
       pearsonr(meap01_pyt['math4'], meap01_pyt['read4'])[0])
 ```
@@ -556,19 +556,16 @@ Ponto de infleção $abil^{*}=−0.4$. Isto é, $abil < 0.4$ possui um efeito ne
 ## Questão 2
 
 ## Questão 3 {.tabset .tabset-fade}
-O dataset `rdchem` contém informação de 32 empresas da industria química. Entre as in-
-formações coletadas, temos: `rdintens` (gastos com pesquisa e desenvolvimento como uma
-
-porcentagem das vendas), `sales` (vendas mensuradas em mlhões de dólares) e `profmarg`
+O dataset `rdchem` contém informação de 32 empresas da industria química. Entre as informações coletadas, temos: `rdintens` (gastos com pesquisa e desenvolvimento como uma porcentagem das vendas), `sales` (vendas mensuradas em mlhões de dólares) e `profmarg`
 (lucros como uma porcentagem das vendas). Ajuste um modelo da forma
 
 $$rdintens = \beta_{0} + \beta_{1}log(sales) + \beta_{2}profmarg + u$$.
 
 Assumindo que as hipóteses do modelos linear clássico acontecem:
 
-### a) {.tabset .tabset-pills}
+### item a) {.tabset .tabset-pills}
 
-Interprete o coeficiente de log(sales).
+Interprete o coeficiente de log(`sales`).
 
 ***Resposta:***
 
@@ -581,48 +578,232 @@ rdchem_fit = smf.ols(
   formula='rdintens ~ np.log(sales) + profmarg',
   data=rdchem_pyt)
   
-rdchem_fit = rdchem_fit.fit()
+result = rdchem_fit.fit()
 
 # print regression table:
-table = pd.DataFrame({'Estimate': round(rdchem_fit.params, 4),
-                      'Std. Error': round(rdchem_fit.bse, 4),
-                      't value': round(rdchem_fit.tvalues, 4),
-                      'Pr(>|t|)': round(rdchem_fit.pvalues, 4)})
+table = pd.DataFrame({'Estimate': round(result.params, 4),\
+                      'Std_Error': round(result.bse, 4)})
 
 #print(f'rdchem_fit.summary(): \n{rdchem_fit.summary()}\n')                      
 print(f'table: \n{table}\n')
-
-
 ```
+
+Podemos reparar que a cada unidade de aumento de `sales`, a um inclemento de 0,003% em `rdintes`.
+
+### item b) {.tabset .tabset-pills}
+
+Teste a hipóteses de que a intensidade de P&D não varia com sales contra a alternativa de que P&D aumenta com as vendas.
+
+***Resposta:***
+
+#### Python
 
 ```{python}
-# CV para alfa = 5% e 1% usando a distribuição t com n-k-1 d.f.:
-n = len(rdchem_pyt)
-k = 2
-nk_1 = n-k-1
+est_test = table.Estimate[["np.log(sales)"]]/table.Std_Error[["np.log(sales)"]] 
+p_valor = 1 - t.cdf(est_test, len(rdchem_pyt))
 
-#alpha = 0.05
+print(f'Com o p-valor de {p_valor[0].round(4)}, não temos evidencias para rejeitar H_0.')
 
-#cv_t = stats.t.ppf(1 - alpha / 2, nk_1)
-#print(f'cv_t: {cv_t}\n')
+```
 
-# CV for alpha=5% using the normal approximation:
-#cv_n = stats.norm.ppf(1 - alpha / 2)
-#print(f'cv_n: {cv_n}\n')
+### item c) {.tabset .tabset-pills}
+Interprete o coeficiente de `profmarg`, ele é economicamente grande?
 
-rdchem_fit_r2 = rdchem_fit.rsquared
-print(f'rdchem_fit_r2: {rdchem_fit_r2}\n')
+***Resposta:***
 
 
-# F statistic:
-#fstat = (rdchem_fit_r2 - r2_r) / (1 - rdchem_fit_r2) * (n - 6) / 3
-#print(f'fstat: {fstat}\n')
 
-## Pag 124, livro
+
+
+### item d) {.tabset .tabset-pills} 
+`profmarg` tem um efeito estatisticamente significativo sobre `rdintens`?
+
+***Resposta:***
+
+
+## Questão 4 {.tabset .tabset-fade}
+
+Utilizando o dataset `gpa1`, ajuste um modelo que explique a nota média em um curso
+superior (`colGPA`) utilizando o número de faltas às aulas por semana (`skipped`), horas de
+estudo semanais (`hsGPA`) e a nota do `ACT` (equivalente ao vestitubular). Assumindo
+que as hipóteses do modelo linear clássico acontecem:
+
+
+### item a) {.tabset .tabset-pills}
+Encontre um intervalo de confiança 95% para $β_{hsGPA}$.
+
+***Resposta:***
+
+#### Python
+```{python}
+gpa1_pyt = wd.data('gpa1')
+
+gpa1_mold = smf.ols(formula="colGPA ~ skipped + hsGPA + ACT", data=gpa1_pyt)
+results = gpa1_mold.fit()
+
+print(results.conf_int(0.05))
+```
+
+Como podemos reparar, para o intervalo de confiança de 95% da variavél `hsGPA` temos: [0.2266, 0.5971]
+
+### item b) {.tabset .tabset-pills}
+Teste $H_0: \beta_{hsGPA} = 0.4 ~ vs. ~ H_1: \beta_{hsGPA} \neq 0.4$ 
+
+***Resposta:***
+
+#### Python
+```{python}
+table = pd.DataFrame({'Estimate': round(results.params, 4),
+                      'Std_Error': round(results.bse, 4)})
+
+est_test = (table.Estimate[["hsGPA"]] - 0.4)/table.Std_Error[["hsGPA"]]
+
+p_valor = 2 * t.cdf(-abs(est_test), len(rdchem_pyt))
+
+print(f'Com o p-valor de {p_valor[0].round(4)}, não temos evidencias para rejeitar H_0.')
 ```
 
 
 
+### item c) {.tabset .tabset-pills}
+Você pode rejeitar a hipóteses $H_0:  \beta_{hsGPA} = 1$ contra a alternativa bilateral?
 
+***Resposta:***
 
-## Questão 4
+#### Python
+
+```{python}
+
+est_test = (table.Estimate[["hsGPA"]] - 1)/table.Std_Error[["hsGPA"]]
+
+p_valor = 2 * t.cdf(-abs(est_test), len(rdchem_pyt))
+
+print(f'Com o p-valor de {p_valor[0].round(4)}, temos evidencias para rejeitar H_0.')
+```
+
+### item d) {.tabset .tabset-pills}
+Teste a hipótese nula de que, uma vez tendo sido controlado as horas de estudo
+semanais, o efeito de `skipped` e `ACT` sobre `colGPA` são, conjuntamente, nulos.
+
+***Resposta:***
+
+#### Python
+
+```{python}
+hipoteses = ['skipped=0', 'ACT=0']
+test_f = results.f_test(hipoteses)
+print(f'Como temos o teste F = {test_f.fvalue[0][0].round(4)} > c = {test_f.pvalue.round(4).tolist()}, rejeitamos H0')
+```
+
+## Questão 5 {.tabset .tabset-fade}
+
+Utilize o conjunto de dados `wage2` e ajuste a regressão
+
+$$log(wage) =  \beta_0 + \beta_1educ + \beta_2exper + \beta_3tenure + \mu$$
+
+em que `wage` é o salario-hora em dolares, `educ` são os anos de educação formal, `exper` são
+os anos de experiência no mercado de trabalho e `tenure` são os anos de permanencia no
+emprego atual.
+
+### item a) {.tabset .tabset-pills}
+Teste a hipótede de significância geral do modelo.
+
+***Resposta:***
+
+#### Python
+```{python}
+wage2_pyt = wd.data('wage2')
+
+wage2_mold = smf.ols(formula="np.log(wage) ~ educ + exper + tenure", data=wage2_pyt)
+results = wage2_mold.fit()
+
+hipoteses = ['educ=0', 'exper=0', 'tenure=0']
+
+test_f = results.f_test(hipoteses)
+
+print(f'Como temos o teste F = {test_f.fvalue[0][0].round(4)} > c = {test_f.pvalue.round(4).tolist()}, rejeitamos H0')
+```
+
+### item b) {.tabset .tabset-pills}
+Teste a hipótese de que um ano a mais de experiência no mercado de trabalho tem o
+mesmo efeito sobre log(`wage`) que mais um ano de permanencia no emprego atual.
+
+***Resposta:***
+
+#### Python
+
+```{python}
+hipoteses = ['exper=tenure']
+test_f = results.f_test(hipoteses)
+
+print(f'Como temos o teste F = {test_f.fvalue[0][0].round(4)} < c = {test_f.pvalue.round(4).tolist()}, não rejeitamos H0')
+```
+
+### item c) {.tabset .tabset-pills}
+Teste a hipótese de que, controlado o número de anos de permanencia no emprego
+(`tenure`), educ e exper não tem efeito nenhum sobre log(`wage`).
+
+***Resposta:***
+
+#### Python
+```{python}
+hipoteses = ['educ=0', 'exper=0']
+test_f = results.f_test(hipoteses)
+
+print(f'Como temos o teste F = {test_f.fvalue[0][0].round(4)} > c = {test_f.pvalue.round(4).tolist()}, rejeitamos H0')
+```
+
+## Questão 6 {.tabset .tabset-fade}
+
+Utilize o conjunto de dados `htv` e ajuste a regressão
+
+$$educ = \beta_0 + \beta_1motheduc + \beta_2fatheduc + \beta_3abil + \beta_4abil^2 + u$$
+
+### item a) {.tabset .tabset-pills}
+
+Teste a hipóteses de que a influencia que motheduc e fatheduc exercem sobre educ
+é a mesma.
+
+***Resposta:***
+
+#### Python
+
+```{python}
+htv_pyt = wd.data('htv')
+
+htv_pyt['abil2'] = htv_pyt['abil']**2
+
+htv_fit = smf.ols(
+  formula='educ ~ motheduc + fatheduc + abil + abil2',
+  data=htv_pyt)
+
+result = htv_fit.fit()
+
+hipoteses = ['motheduc=fatheduc']
+test_f = result.f_test(hipoteses)
+
+print(f'Como temos o teste F = {test_f.fvalue[0][0].round(4)} > c = {test_f.pvalue.round(4).tolist()}, rejeitamos H0') 
+```
+
+### item b) {.tabset .tabset-pills}
+
+Teste a hipótese de que educ está linearmente relacionado com abil contra a alter-
+nativa que diz que a relação é quadrática.
+
+***Resposta:***
+
+### item c) {.tabset .tabset-pills}
+
+Um colega de trabalho diz que o modelo $educ = \beta_0 + \beta_1abil + \beta_2abil^2 + \mi$ é suficiente,
+e que tanto `motheduc` e `fatheduc` não são importantes para o modelos. Faça um teste
+de hipóteses para rejeitar ou não rejeitar a hipótese do seu colega.
+
+***Resposta:***
+
+#### Python
+```{python}
+hipoteses = ['motheduc=0','fatheduc=0']
+test_f = result.f_test(hipoteses)
+
+print(f'Como temos o teste F = {test_f.fvalue[0][0].round(4)} > c = {test_f.pvalue.round(4).tolist()}, rejeitamos H0.')
+```
