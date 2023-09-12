@@ -359,7 +359,19 @@ $$E(\hat{u}|X) = 0$$
 
 ## Questão 2
 
-Mostre que $X′\hat{u} = 0$ e $\sum_{i=1}^{n}\hat{u}_i = 0$.
+Mostre que ${X}^\prime\hat{u} = 0$ e $\sum_{i=1}^{n}\hat{u}_i = 0$.
+
+***Resposta:***
+
+• *(i.)* Demostrando para ${X}^\prime\hat{u} = 0$, temos:
+ 
+ $$x^\prime\hat{u} = X^\prime(Y-\hat{Y}) = X^\prime(Y-X\hat{\beta})$$
+ $$X^\prime(Y-X[({X}^\prime{X})^{-1}{X}^\prime{Y}]) = {X}^\prime[(I - X({X}^\prime{X})^{-1}{X}^\prime)Y]$$ 
+ $$(X^\prime - X^\prime{X}(X^\prime{X})^{-1}X^\prime)Y = (X^\prime-IX^\prime)Y=(X^\prime-X)Y = 0Y = 0$$
+
+• *(ii.)* Demostrando que $\sum_{i=1}^{n}\hat{u}_i = 0$.
+  
+ 
 
 ## Questão 3
 
