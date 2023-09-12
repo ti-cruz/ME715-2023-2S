@@ -825,3 +825,40 @@ test_f = result.f_test(hipoteses)
 
 print(f'Como temos o teste F = {test_f.fvalue[0][0].round(4)} > c = {test_f.pvalue.round(4).tolist()}, rejeitamos H0.')
 ```
+
+# Lista 5 {.tabset .tabset-fade}
+
+## Questão 1 
+Prove o teorema FWL.
+
+***Resposta:***
+
+## Questão 2 {.tabset .tabset-fade}
+Considere o seguinte conjunto de dados
+
+### item a)
+Obtenha $\hat{\beta}$ e $\hat{V}(\hat{\beta}|X)$.
+
+***Resposta:***
+
+### item b)
+Após sua análise, lhe é informado que $V(u) = \sigma^2 ~ x ~ Diag(0.10, 0.05, 0.20, 0.30, 0.15)$.
+Use esta informação para calcular $\hat{V}(\hat{\beta}|X)$  levando em consideração esta informação.
+
+***Resposta:***
+
+## Questão 3 
+Seja o modelo $Y = X_1\beta_1 + X_2\beta_2 + u$. Mostre que se omitirmos $X_2$, $E(\hat{\beta}_1|X) = \beta_1 + ({X}^\prime_1{X_1})^{-1}{X}^\prime_1{X_2}\beta_2$.
+
+***Resposta:***
+
+## Questão 4 
+Implemente o estimador de White em Julia
+
+***Resposta:***
+
+## Questão 5 
+Implemente o estimador HAC em Julia
+
+***Resposta:***
+
