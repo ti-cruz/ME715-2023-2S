@@ -486,7 +486,18 @@ Mostre que $s^2 = \frac{\hat{u}'\hat{u}}{n-k-1}$ é um estimador não viesado pa
 
 ***Resposta:***
 
-[A colocar]
+$$\hat{u}^\prime\hat{u} = (Y-\hat{Y})^\prime(Y-\hat{Y}) = 
+(Y-X\hat{\beta})^\prime(Y-X\hat{\beta}) = 
+(Y - X(X^\prime{X})^{-1}X^\prime{Y})^\prime(Y - X(X^\prime{X})^{-1}X^\prime{Y})$$
+$$=((I-H)Y)^\prime[(I-H)Y] = Y^\prime(I-H)^\prime(I-H)Y$$
+
+Como foi demostrado no item anterior que $(I - H)^\prime = (I - H)$, temos:
+
+$$Y^\prime(I-H)(I-H)Y = Y^\prime(I-H)Y$$
+
+Dessa maneira, temos a $E_x(\hat{u}^\prime\hat{u})$:
+
+[Continua...]
 
 ## Questão 3
 
@@ -867,6 +878,9 @@ Use esta informação para calcular $\hat{V}(\hat{\beta}|X)$  levando em conside
 Seja o modelo $Y = X_1\beta_1 + X_2\beta_2 + u$. Mostre que se omitirmos $X_2$, $E(\hat{\beta}_1|X) = \beta_1 + ({X}^\prime_1{X_1})^{-1}{X}^\prime_1{X_2}\beta_2$.
 
 ***Resposta:***
+
+$$E((X_1^\prime{X_1})^{-1}X_1^\prime{Y}|X) = (X_1^\prime{X_1})^{-1}X_1^\prime{E(Y|X)}$$
+$$(X_1^\prime{X_1})^{-1}X_1^\prime(X_1\beta_1 + X_2\beta_2) = \beta_1 + (X_1^\prime{X_1})^{-1}X_1^\prime[X_2\beta_2]$$
 
 ## Questão 4 
 Implemente o estimador de White em Julia

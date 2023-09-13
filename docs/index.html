@@ -2864,7 +2864,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Listas - ME715</h1>
 <h3 class="subtitle"><i>Período: 2023/2S</i></h3>
 <h4 class="author"><b>Nome: </b> Tiago Henrique da Cruz <br></h4>
-<h4 class="date"><b>Último atualização:</b> 12 de setembro, 2023</h4>
+<h4 class="date"><b>Último atualização:</b> 13 de setembro, 2023</h4>
 
 </div>
 
@@ -3394,7 +3394,17 @@ simetrica.</p>
 \frac{\hat{u}&#39;\hat{u}}{n-k-1}\)</span> é um estimador não viesado
 para <span class="math inline">\(\sigma^2\)</span>.</p>
 <p><strong><em>Resposta:</em></strong></p>
-<p>[A colocar]</p>
+<p><span class="math display">\[\hat{u}^\prime\hat{u} =
+(Y-\hat{Y})^\prime(Y-\hat{Y}) =
+(Y-X\hat{\beta})^\prime(Y-X\hat{\beta}) =
+(Y - X(X^\prime{X})^{-1}X^\prime{Y})^\prime(Y -
+X(X^\prime{X})^{-1}X^\prime{Y})\]</span> <span class="math display">\[=((I-H)Y)^\prime[(I-H)Y] =
+Y^\prime(I-H)^\prime(I-H)Y\]</span></p>
+<p>Como foi demostrado no item anterior que <span class="math inline">\((I - H)^\prime = (I - H)\)</span>, temos:</p>
+<p><span class="math display">\[Y^\prime(I-H)(I-H)Y =
+Y^\prime(I-H)Y\]</span></p>
+<p>Dessa maneira, temos a <span class="math inline">\(E_x(\hat{u}^\prime\hat{u})\)</span>:</p>
+<p>[Continua…]</p>
 </div>
 <div id="questão-3-1" class="section level2">
 <h2>Questão 3</h2>
@@ -3843,6 +3853,10 @@ consideração esta informação.</p>
 + u\)</span>. Mostre que se omitirmos <span class="math inline">\(X_2\)</span>, <span class="math inline">\(E(\hat{\beta}_1|X) = \beta_1 +
 ({X}^\prime_1{X_1})^{-1}{X}^\prime_1{X_2}\beta_2\)</span>.</p>
 <p><strong><em>Resposta:</em></strong></p>
+<p><span class="math display">\[E((X_1^\prime{X_1})^{-1}X_1^\prime{Y}|X)
+= (X_1^\prime{X_1})^{-1}X_1^\prime{E(Y|X)}\]</span> <span class="math display">\[(X_1^\prime{X_1})^{-1}X_1^\prime(X_1\beta_1 +
+X_2\beta_2) = \beta_1 +
+(X_1^\prime{X_1})^{-1}X_1^\prime[X_2\beta_2]\]</span></p>
 </div>
 <div id="questão-4-3" class="section level2">
 <h2>Questão 4</h2>
