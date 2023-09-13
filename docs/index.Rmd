@@ -834,10 +834,26 @@ Prove o teorema FWL.
 ***Resposta:***
 
 ## Questão 2 {.tabset .tabset-fade}
-Considere o seguinte conjunto de dados
+Considere o seguinte conjunto de dados:
+
++-------+-------+
+| **Y** | **X** |
++:=====:+:=====:+
+| 4     | 2     |
++-------+-------+
+| 7     | 3     |
++-------+-------+
+| 3     | 1     |
++-------+-------+
+| 9     | 5     |
++-------+-------+
+| 19    | 9     |
++-------+-------+
 
 ### item a)
 Obtenha $\hat{\beta}$ e $\hat{V}(\hat{\beta}|X)$.
+
+
 
 ***Resposta:***
 
