@@ -640,10 +640,6 @@ Interprete o coeficiente de `profmarg`, ele é economicamente grande?
 
 ***Resposta:***
 
-
-
-
-
 ### item d) {.tabset .tabset-pills} 
 `profmarg` tem um efeito estatisticamente significativo sobre `rdintens`?
 
@@ -891,4 +887,62 @@ Implemente o estimador de White em Julia
 Implemente o estimador HAC em Julia
 
 ***Resposta:***
+
+# Lista 6 {.tabset .tabset-fade}
+
+## Questão 1
+## Questão 2
+## Questão 3 {.tabset .tabset-pills}
+
+Aprenda a ajustar um modelo por MQGF no Python e em Julia. Reproduza os resultados
+vistos em sala de aula e compare os resultados obtidos com os fornecidos com R.
+
+### Python
+
+***Resposta:***
+```{python}
+# Modelo
+smoke_pyt = wd.data('smoke')
+
+smoke_fit = smf.ols(
+  formula='cigs ~ np.log(income) + np.log(cigpric) + educ + age + I(age**2) + restaurn',
+  data=smoke_pyt)
+
+result = smoke_fit.fit()
+
+# Modelo Reg Aux
+smoke_reg_aux = smf.ols(
+  formula = 'np.log(result.resid**2) ~ np.log(income) + np.log(cigpric) + educ + age + I(age**2) + restaurn',
+  data = smoke_pyt)
+  
+## w
+w = 1/np.exp(smoke_reg_aux.fit().fittedvalues)
+
+# Modelo quadratico ponderado MQGF
+smoke_fit_MQGF = smf.wls(
+  formula='cigs ~ np.log(income) + np.log(cigpric) + educ + age + I(age**2) + restaurn',
+  weights = w,
+  data=smoke_pyt)
+
+result_MQGF = smoke_fit_MQGF.fit()
+
+# print regression table:
+table = pd.DataFrame({#'MQO': round(result.params, 5),\
+                      #'StdMQO': round(result.bse, 5),\
+                      #'pMQO': round(result.pvalues, 5),\
+                      'MQGF': round(result_MQGF.params, 5),\
+                      'stdMQGF': round(result_MQGF.bse, 5),\
+                      'pMQGF': round(result_MQGF.pvalues, 5)})
+
+#print(f'rdchem_fit.summary(): \n{rdchem_fit.summary()}\n')                      
+print(f'table: \n{table}\n')
+```
+
+## Questão 4
+
+
+
+
+
+
 

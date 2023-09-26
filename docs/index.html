@@ -2864,7 +2864,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Listas - ME715</h1>
 <h3 class="subtitle"><i>Período: 2023/2S</i></h3>
 <h4 class="author"><b>Nome: </b> Tiago Henrique da Cruz <br></h4>
-<h4 class="date"><b>Último atualização:</b> 13 de setembro, 2023</h4>
+<h4 class="date"><b>Último atualização:</b> 26 de setembro, 2023</h4>
 
 </div>
 
@@ -3867,6 +3867,72 @@ X_2\beta_2) = \beta_1 +
 <h2>Questão 5</h2>
 <p>Implemente o estimador HAC em Julia</p>
 <p><strong><em>Resposta:</em></strong></p>
+</div>
+</div>
+<div id="lista-6" class="section level1 tabset tabset-fade">
+<h1 class="tabset tabset-fade">Lista 6</h1>
+<div id="questão-1-5" class="section level2">
+<h2>Questão 1</h2>
+</div>
+<div id="questão-2-5" class="section level2">
+<h2>Questão 2</h2>
+</div>
+<div id="questão-3-4" class="section level2 tabset tabset-pills">
+<h2 class="tabset tabset-pills">Questão 3</h2>
+<p>Aprenda a ajustar um modelo por MQGF no Python e em Julia. Reproduza
+os resultados vistos em sala de aula e compare os resultados obtidos com
+os fornecidos com R.</p>
+<div id="python-23" class="section level3">
+<h3>Python</h3>
+<p><strong><em>Resposta:</em></strong></p>
+<pre class="python"><code># Modelo
+smoke_pyt = wd.data(&#39;smoke&#39;)
+
+smoke_fit = smf.ols(
+  formula=&#39;cigs ~ np.log(income) + np.log(cigpric) + educ + age + I(age**2) + restaurn&#39;,
+  data=smoke_pyt)
+
+result = smoke_fit.fit()
+
+# Modelo Reg Aux
+smoke_reg_aux = smf.ols(
+  formula = &#39;np.log(result.resid**2) ~ np.log(income) + np.log(cigpric) + educ + age + I(age**2) + restaurn&#39;,
+  data = smoke_pyt)
+  
+## w
+w = 1/np.exp(smoke_reg_aux.fit().fittedvalues)
+
+# Modelo quadratico ponderado MQGF
+smoke_fit_MQGF = smf.wls(
+  formula=&#39;cigs ~ np.log(income) + np.log(cigpric) + educ + age + I(age**2) + restaurn&#39;,
+  weights = w,
+  data=smoke_pyt)
+
+result_MQGF = smoke_fit_MQGF.fit()
+
+# print regression table:
+table = pd.DataFrame({#&#39;MQO&#39;: round(result.params, 5),\
+                      #&#39;StdMQO&#39;: round(result.bse, 5),\
+                      #&#39;pMQO&#39;: round(result.pvalues, 5),\
+                      &#39;MQGF&#39;: round(result_MQGF.params, 5),\
+                      &#39;stdMQGF&#39;: round(result_MQGF.bse, 5),\
+                      &#39;pMQGF&#39;: round(result_MQGF.pvalues, 5)})
+
+#print(f&#39;rdchem_fit.summary(): \n{rdchem_fit.summary()}\n&#39;)                      
+print(f&#39;table: \n{table}\n&#39;)</code></pre>
+<pre><code>## table: 
+##                     MQGF   stdMQGF    pMQGF
+## Intercept        5.63546  17.80314  0.75167
+## np.log(income)   1.29524   0.43701  0.00313
+## np.log(cigpric) -2.94031   4.46014  0.50993
+## educ            -0.46345   0.12016  0.00012
+## age              0.48195   0.09681  0.00000
+## I(age ** 2)     -0.00563   0.00094  0.00000
+## restaurn        -3.46106   0.79551  0.00002</code></pre>
+</div>
+</div>
+<div id="questão-4-4" class="section level2">
+<h2>Questão 4</h2>
 </div>
 </div>
 
