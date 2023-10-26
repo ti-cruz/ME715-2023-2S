@@ -990,6 +990,18 @@ print(f'Como a estatistica do teste  F = {fstat_man} com um valor p = {fpval_man
 
 ## Questão 2 {.tabset .tabset-pills}
 
+Você e seu colega estão trabalhando com o dataset hprice1 do pacote wooldridge.
+Depois de várias análises, chegam nos seguintes modelos:
+
+Modelo 1: $log(price) = \beta_0 + \beta_1lotsize + \beta_2sqrft + \beta_3bdms + u$
+
+Modelo 2: $log(price) = \beta_0 + \beta_1log(lotsize) + \beta_2log(sqrft) + \beta_3bdms + u$
+
+
+Você e seu colega querem saber se algum dos modelos está mal-especificado. Utilize o teste
+de Davidson-MacKinnon para saber se existe ou não má-especificação da forma funcional em
+alguns dos modelos. Preferiria algum modelo frente ao outro? Compare os resultados com os
+obtidos em sala de aula com o teste de Mizon e Richard.
 ### Python
 
 ```{python}

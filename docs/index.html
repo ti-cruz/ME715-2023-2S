@@ -3977,8 +3977,17 @@ print(f&#39;Como a estatistica do teste  F = {fstat_man} com um valor p = {fpval
 </div>
 <div id="questão-2-6" class="section level2 tabset tabset-pills">
 <h2 class="tabset tabset-pills">Questão 2</h2>
-<div id="python-25" class="section level3">
-<h3>Python</h3>
+<p>Você e seu colega estão trabalhando com o dataset hprice1 do pacote
+wooldridge. Depois de várias análises, chegam nos seguintes modelos:</p>
+<p>Modelo 1: <span class="math inline">\(log(price) = \beta_0 +
+\beta_1lotsize + \beta_2sqrft + \beta_3bdms + u\)</span></p>
+<p>Modelo 2: <span class="math inline">\(log(price) = \beta_0 +
+\beta_1log(lotsize) + \beta_2log(sqrft) + \beta_3bdms + u\)</span></p>
+<p>Você e seu colega querem saber se algum dos modelos está
+mal-especificado. Utilize o teste de Davidson-MacKinnon para saber se
+existe ou não má-especificação da forma funcional em alguns dos modelos.
+Preferiria algum modelo frente ao outro? Compare os resultados com os
+obtidos em sala de aula com o teste de Mizon e Richard. ### Python</p>
 <pre class="python"><code># importando os dados &quot;hprice1&quot;
 hprice1_python = wd.data(&#39;hprice1&#39;).loc[:, [&quot;price&quot;, &quot;lotsize&quot;, &quot;sqrft&quot;, &quot;bdrms&quot;]]
 
@@ -4012,7 +4021,6 @@ print(f&#39;table: \n{table}\n&#39;)</code></pre>
 p-valor de yhat = 0.0215, demostra significativo, dessa maneira, pode-se
 dizer que para o modelo 1 está em má-especificação da forma funcional.
 Assim, é preferencial escolher o modelo 2.</p>
-</div>
 </div>
 </div>
 
