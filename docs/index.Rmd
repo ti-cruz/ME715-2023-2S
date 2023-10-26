@@ -12,12 +12,13 @@ output:
     theme: flatly
 ---
 
-<link rel="shortcut icon" href="https://images.fineartamerica.com/images/artworkimages/medium/3/stonks-meme-ami-lailasari-transparent.png">
+<link rel="shortcut icon" href="https://pbs.twimg.com/media/FxDohKnWcAA2n94.jpg">
 
 ```{=html}
-<img style="position:absolute; top:10px; right:80px; padding:10px;"
-  src="https://images.fineartamerica.com/images/artworkimages/medium/3/stonks-meme-ami-lailasari-transparent.png" width="170" height="170"/>
+<img style="position:absolute; top:10px; right:85px; padding:10px;"
+  src="https://pbs.twimg.com/media/FxDohKnWcAA2n94.jpg" width="165" height="165"/>
 ```
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -38,7 +39,7 @@ library(reticulate)
 library(wooldridge)
 #library(JuliaCall)
 #install_julia()
-#py_install("wooldridge",pip=TRUE)
+#py_install("wooldridge",pip=T)
 #py_install("markdown-toc",pip=TRUE)
 #julia_setup()
 #JuliaCall::julia_install_package("Libdl")
@@ -54,9 +55,9 @@ import numpy as np
 import statsmodels.formula.api as smf
 import scipy.stats as stats
 import statsmodels as hip
+import statsmodels.api as sm
 from scipy.stats import t
 ```
-
 
 # Instruções
 
@@ -940,6 +941,83 @@ print(f'table: \n{table}\n')
 
 ## Questão 4
 
+```{python}
+
+```
+
+# Lista 7 {.tabset .tabset-fade}
+
+## Questão 1 {.tabset .tabset-pills}
+
+Utilize o `dataset` ***ceosal1*** do pacote ***wooldridge*** e ajuste o modelo
+
+$$log(wage) = \beta_{0} + \beta_{1}log(sales) + \beta_{2}roe + \beta_{3}rosneg + \mu$$
+
+em que `rosneg` é uma dummy que é igual a um se `ros` < 0 e zero caso contrário. Aplique o teste RESET e verifique se existe alguma evidência de má-especificação da forma funcional da equação. [ros: retorno sobre o capital das empresas]
+
+### Python
+
+```{python}
+# importando os dados "ceosal1"
+ceosal1_python = wd.data('ceosal1').loc[:, ["salary", "sales","roe","ros"]]
+
+# Variavél dummy "rosneg" 
+ceosal1_python["rosneg"] = ceosal1_python["ros"]\
+                           .apply(lambda x : 1 if x < 0 else 0)
+
+# Modelo
+reg = smf.ols(formula='np.log(salary) ~ np.log(sales) + roe + rosneg', data= ceosal1_python)
+results = reg.fit()
+
+# Modelo_exp:
+ceosal1_python['fitted_sq'] = results.fittedvalues ** 2
+ceosal1_python['fitted_cub'] = results.fittedvalues ** 3
+
+reg_reset = smf.ols(formula='np.log(salary) ~ np.log(sales) + roe + rosneg + fitted_sq + fitted_cub', data=ceosal1_python)
+
+results_reset = reg_reset.fit()
+                      
+# Teste RESET
+hypotheses = ['fitted_sq = 0', 'fitted_cub = 0']
+ftest_man = results_reset.f_test(hypotheses)
+fstat_man = ftest_man.statistic[0][0]
+fpval_man = ftest_man.pvalue
+#print(f'fstat_man: {fstat_man}\n')
+#print(f'fpval_man: {fpval_man}\n')
+
+print(f'Como a estatistica do teste  F = {fstat_man} com um valor p = {fpval_man}, rejeitamos H0, desse modo, temos ma-especificacao da forma funcional.')
+```
+
+## Questão 2 {.tabset .tabset-pills}
+
+### Python
+
+```{python}
+# importando os dados "hprice1"
+hprice1_python = wd.data('hprice1').loc[:, ["price", "lotsize", "sqrft", "bdrms"]]
+
+# Modelo 1
+regr_1 = smf.ols(formula='np.log(price) ~ lotsize + sqrft + bdrms', data=hprice1_python)
+mod_1 = regr_1.fit()
+
+# Modelo 2
+regr_2 = smf.ols(formula='np.log(price) ~ np.log(lotsize) + np.log(sqrft) + bdrms', data=hprice1_python)
+mod_2 = regr_2.fit()
+
+# Tabela ANOVA
+hprice1_python['yhat'] = mod_2.fittedvalues
+
+reg = smf.ols(formula='np.log(price) ~ lotsize + sqrft + bdrms + yhat', data=hprice1_python)
+modelo = reg.fit() 
+
+table = pd.DataFrame({'Estimate': round(modelo.params, 4),\
+                      'Std_Error': round(modelo.bse, 4),
+                      't': round(modelo.tvalues, 4),
+                      'pvalues': round(modelo.pvalues, 4)})                     
+print(f'table: \n{table}\n')
+```
+
+Obtando pela abordagem proposta por Mizon e Richard, como temos o p-valor de yhat = 0.0215, demostra significativo, dessa maneira, pode-se dizer que para o modelo 1 está em má-especificação da forma funcional. Assim, é preferencial escolher o modelo 2.
 
 
 
