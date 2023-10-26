@@ -1002,6 +1002,7 @@ Você e seu colega querem saber se algum dos modelos está mal-especificado. Uti
 de Davidson-MacKinnon para saber se existe ou não má-especificação da forma funcional em
 alguns dos modelos. Preferiria algum modelo frente ao outro? Compare os resultados com os
 obtidos em sala de aula com o teste de Mizon e Richard.
+
 ### Python
 
 ```{python}
